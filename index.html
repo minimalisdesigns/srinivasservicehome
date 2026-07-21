@@ -94,6 +94,44 @@
             background-color: #059669 !important;
             color: #ffffff !important;
         }
+
+        .mobile-action-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 3rem;
+            min-height: 3rem;
+            padding: 0.75rem;
+            border-radius: 9999px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.16);
+        }
+        @media (max-width: 640px) {
+            .mobile-action-btn {
+                width: 3.75rem;
+                height: 3.75rem;
+                padding: 0;
+                border-radius: 9999px;
+            }
+            .mobile-action-btn i {
+                width: 1.35rem !important;
+                height: 1.35rem !important;
+            }
+            .mobile-action-btn span {
+                display: none !important;
+            }
+            .mobile-action-btn span.sm\:hidden {
+                display: inline !important;
+                font-size: 0.6rem;
+                letter-spacing: 0.15em;
+                margin-left: 0.25rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-alabaster text-espresso font-sans antialiased selection:bg-amberGold selection:text-white relative overflow-x-hidden">
@@ -113,17 +151,19 @@
                 <a href="#contact" class="hover:text-bronze transition-colors">Contact Us</a>
             </nav>
 
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2">
                 <a href="https://wa.me/917780376043?text=Hello%20Srinivas%20Service%20Homes,%20I%20would%20like%20to%20inquire%20about%20villa%20availability." 
                    target="_blank" 
-                   class="flex items-center space-x-1.5 bg-emerald-600 text-white text-xs px-3.5 py-2.5 rounded-full hover:bg-emerald-700 transition-all shadow-md font-semibold">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                   aria-label="WhatsApp contact"
+                   class="mobile-action-btn flex items-center justify-center sm:justify-start space-x-0 sm:space-x-1.5 bg-emerald-600 text-white text-xs sm:text-xs px-0 py-0 sm:px-3.5 sm:py-2.5 rounded-full hover:bg-emerald-700 transition-all duration-300 shadow-md font-semibold w-12 h-12 sm:w-auto sm:h-auto">
+                    <i data-lucide="message-circle" class="w-5 h-5 sm:w-4 sm:h-4"></i>
                     <span class="hidden sm:inline">WhatsApp</span>
                 </a>
 
-                <button onclick="openHostSecurityModal()" class="flex items-center space-x-1.5 text-xs uppercase tracking-wider px-3.5 py-2.5 border border-bronze/30 rounded-full hover:bg-bronze hover:text-white transition-all">
-                    <i data-lucide="shield-lock" class="w-4 h-4"></i>
+                <button onclick="openHostSecurityModal()" aria-label="Host access" class="mobile-action-btn flex items-center justify-center sm:justify-start space-x-0 sm:space-x-1.5 text-xs uppercase tracking-wider px-0 py-0 sm:px-3.5 sm:py-2.5 border border-transparent rounded-full bg-amberGold text-white hover:bg-[#b88226] transition-all duration-300 w-12 h-12 sm:w-auto sm:h-auto shadow-lg sm:shadow-none">
+                    <i data-lucide="shield-lock" class="w-5 h-5 sm:w-4 sm:h-4"></i>
                     <span class="hidden sm:inline">Host Access</span>
+                    <span class="sm:hidden">HOST</span>
                 </button>
             </div>
         </div>

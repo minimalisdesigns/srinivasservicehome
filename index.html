@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRINIVAS SERVICE HOMES | Luxury Serviced Residences</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alabaster: '#FBF9F5',
+                        espresso: '#1A1615',
+                        bronze: '#8C6D46',
+                        amberGold: '#D4A359',
+                        champagne: '#F3EAD8',
+                        emeraldSuccess: '#059669',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #FBF9F5; }
+        ::-webkit-scrollbar-thumb { background: #8C6D46; border-radius: 4px; }
+
+        .glass-card {
+            background: rgba(251, 249, 245, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 163, 89, 0.25);
+        }
+        .glass-dark {
+            background: rgba(26, 22, 21, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 163, 89, 0.3);
+        }
+
+        /* Cute Mini Calendar Styling */
+        .cute-mini-day {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin: auto;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day-btn {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .calendar-day-btn.selected-date {
+            background-color: #8C6D46 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 12px rgba(140, 109, 70, 0.6);
+            transform: scale(1.15);
+        }
+
+        .rate-card-option.selected-rate {
+            border-color: #8C6D46 !important;
+            background-color: #F3EAD8 !important;
+            box-shadow: 0 4px 15px rgba(140, 109, 70, 0.25);
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(5, 150, 105, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+        .btn-success-anim {
+            animation: successPulse 1.5s infinite;
+            background-color: #059669 !important;
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="bg-alabaster text-espresso font-sans antialiased selection:bg-amberGold selection:text-white relative overflow-x-hidden">
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300 glass-card border-b border-bronze/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex flex-col">
+                <span class="font-serif tracking-[0.2em] text-lg sm:text-xl font-bold uppercase text-espresso">Srinivas</span>
+                <span class="text-[9px] tracking-[0.35em] text-bronze uppercase -mt-1 font-medium">Service Homes</span>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden lg:flex items-center space-x-8 text-xs uppercase tracking-[0.2em] font-medium text-espresso/80">
+                <a href="#villas" class="hover:text-bronze transition-colors">Our Villas</a>
+                <a href="#calendar-section" class="hover:text-bronze transition-colors">Availability Matrix</a>
+                <a href="#contact" class="hover:text-bronze transition-colors">Contact Us</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <a href="https://wa.me/917780376043?text=Hello%20Srinivas%20Service%20Homes,%20I%20would%20like%20to%20inquire%20about%20villa%20availability." 
+                   target="_blank" 
+                   class="flex items-center space-x-1.5 bg-emerald-600 text-white text-xs px-3.5 py-2.5 rounded-full hover:bg-emerald-700 transition-all shadow-md font-semibold">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">WhatsApp</span>
+                </a>
+
+                <button onclick="openHostSecurityModal()" class="flex items-center space-x-1.5 text-xs uppercase tracking-wider px-3.5 py-2.5 border border-bronze/30 rounded-full hover:bg-bronze hover:text-white transition-all">
+                    <i data-lucide="shield-lock" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Host Access</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute inset-0 z-0">
+            <img id="hero-bg" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80" 
+                 class="w-full h-full object-cover filter brightness-[0.82] contrast-[1.05] transition-all duration-700" alt="Srinivas Service Homes Header">
+            <div class="absolute inset-0 bg-gradient-to-t from-alabaster via-transparent to-espresso/40"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto mt-10">
+            <span class="text-amberGold text-xs uppercase tracking-[0.4em] font-semibold mb-3 block">Luxury Serviced Villas in Andhra Pradesh</span>
+            <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal text-white drop-shadow-md leading-tight mb-6">
+                Rajahmundry • Bhimavaram • Kovvur
+            </h1>
+            <p class="text-alabaster/90 text-sm sm:text-base font-light max-w-2xl mx-auto mb-8 leading-relaxed">
+                Experience ultra-luxury private serviced homes available for short-stay hourly retreats, nightly packages, or complete 24-hour stays.
+            </p>
+            
+            <div class="glass-card p-2 rounded-full inline-flex flex-wrap justify-center gap-2 max-w-full shadow-2xl border border-white/20">
+                <button onclick="filterVillas('all')" class="loc-btn active px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all bg-espresso text-alabaster">All Locations</button>
+                <button onclick="filterVillas('rajahmundry')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Rajahmundry</button>
+                <button onclick="filterVillas('bhimavaram')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Bhimavaram</button>
+                <button onclick="filterVillas('kovvur')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Kovvur</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid with Sidebar Gallery -->
+    <section id="villas" class="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Left Sidebar: Realistic Preview Gallery & Quick Reach -->
+            <aside class="w-full lg:w-1/3 space-y-6">
+                <div class="glass-card p-6 rounded-2xl border border-bronze/20 shadow-md">
+                    <span class="text-bronze text-[10px] uppercase tracking-[0.25em] font-semibold block mb-1">Sidebar Showcase</span>
+                    <h3 class="font-serif text-xl font-normal text-espresso mb-4">Realistic Villa Interiors</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
+                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Royal Living Lounge">
+                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
+                                <span class="text-white text-xs font-serif">Grand Living Lounge</span>
+                            </div>
+                        </div>
+
+                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
+                            <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Master Suite Bed">
+                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
+                                <span class="text-white text-xs font-serif">Master Suite Bedroom</span>
+                            </div>
+                        </div>
+
+                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
+                            <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Gourmet Kitchen">
+                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
+                                <span class="text-white text-xs font-serif">Chef's Modern Kitchen</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Direct Contact Badge -->
+                    <div class="mt-6 pt-4 border-t border-bronze/10 text-center">
+                        <p class="text-xs text-espresso/70 mb-1">Direct Booking Assistance:</p>
+                        <a href="tel:7780376043" class="font-serif text-lg font-bold text-bronze hover:underline flex items-center justify-center space-x-2">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                            <span>+91 7780376043</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Main Container: Villas Showcase Cards -->
+            <main class="w-full lg:w-2/3">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
+                    <div>
+                        <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Featured Properties</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-normal text-espresso mt-1">Select A Villa Stay</h2>
+                    </div>
+                </div>
+
+                <div id="villas-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Injected via JavaScript -->
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <!-- Master Cute Mini Occupancy Calendar Section (User View) -->
+    <section id="calendar-section" class="py-16 bg-champagne/40 border-y border-bronze/10 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                <div>
+                    <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Live Availability Matrix</span>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-normal text-espresso mt-1">Property Occupancy View</h2>
+                </div>
+
+                <!-- Month & Year Controls for Main View -->
+                <div class="flex flex-wrap items-center gap-3 mt-4 md:mt-0">
+                    <div class="flex items-center space-x-2 bg-white/90 border border-bronze/20 rounded-full px-3 py-1.5 shadow-sm">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-bronze"></i>
+                        <select id="main-month-select" onchange="changeMainCalendarDate()" class="bg-transparent text-xs font-semibold text-espresso focus:outline-none">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6" selected>July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                        <select id="main-year-select" onchange="changeMainCalendarDate()" class="bg-transparent text-xs font-semibold text-espresso focus:outline-none border-l border-bronze/20 pl-2">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center space-x-3 text-[11px] tracking-wider font-medium bg-white/60 px-3 py-1.5 rounded-full border border-bronze/10">
+                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Avail</span></div>
+                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-amberGold"></span><span>Booked</span></div>
+                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-espresso"></span><span>Locked</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cute Mini-Calendar Cards Grid -->
+            <div id="master-calendar-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Map Section -->
+    <section id="contact" class="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Get In Touch</span>
+            <h2 class="font-serif text-3xl font-normal text-espresso mt-1">Personal Hospitality Concierge</h2>
+            <p class="text-espresso/70 text-sm mt-2">Reach out directly via phone or WhatsApp for instant luxury bookings across Rajahmundry, Bhimavaram & Kovvur.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
+                <div class="w-12 h-12 bg-bronze/10 text-bronze rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="phone-call" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-serif text-lg font-semibold mb-1">Direct Call</h4>
+                <a href="tel:7780376043" class="text-bronze font-bold text-base hover:underline block mb-1">7780376043</a>
+                <span class="text-xs text-espresso/60">24/7 Concierge Service</span>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-serif text-lg font-semibold mb-1">Host WhatsApp</h4>
+                <a href="https://wa.me/917780376043?text=Hello%20Srinivas%20Service%20Homes,%20I%20want%20to%20book%20a%20villa." target="_blank" class="text-emerald-700 font-bold text-base hover:underline block mb-1">+91 7780376043</a>
+                <span class="text-xs text-espresso/60">Instant Automated Reservations</span>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
+                <div class="w-12 h-12 bg-bronze/10 text-bronze rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-serif text-lg font-semibold mb-1">Prime Locations</h4>
+                <p class="text-xs text-espresso/80">Rajahmundry, Bhimavaram & Kovvur, Andhra Pradesh</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Floating Glass Bar -->
+    <div class="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm">
+        <div class="glass-dark rounded-full p-3 px-6 flex items-center justify-between shadow-2xl text-white">
+            <a href="#villas" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-champagne/80 hover:text-white">
+                <i data-lucide="home" class="w-5 h-5 mb-0.5"></i>
+                Villas
+            </a>
+            <a href="tel:7780376043" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-champagne/80 hover:text-white">
+                <i data-lucide="phone" class="w-5 h-5 mb-0.5"></i>
+                Call
+            </a>
+            <a href="https://wa.me/917780376043?text=Hi,%20I%20am%20interested%20in%20booking%20a%20Srinivas%20Service%20Home." target="_blank" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-emerald-400 font-bold">
+                <i data-lucide="message-circle" class="w-5 h-5 mb-0.5"></i>
+                WhatsApp
+            </a>
+            <button onclick="openHostSecurityModal()" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-amberGold hover:text-white">
+                <i data-lucide="shield-check" class="w-5 h-5 mb-0.5"></i>
+                Host
+            </button>
+        </div>
+    </div>
+
+    <!-- Residence Detail & Interactive Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 bg-espresso/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 hidden overflow-y-auto">
+        <div class="glass-card w-full max-w-4xl rounded-2xl p-5 sm:p-8 border border-amberGold/30 relative text-espresso my-auto max-h-[92vh] overflow-y-auto">
+            <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-espresso/60 hover:text-espresso bg-alabaster/80 p-2 rounded-full z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div id="modal-dynamic-content">
+                <!-- Dynamically Injected -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Host Portal Access Flow Modal -->
+    <div id="host-modal" class="fixed inset-0 z-50 bg-espresso/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card w-full max-w-3xl rounded-2xl p-6 sm:p-8 border border-amberGold/30 relative text-espresso max-h-[90vh] overflow-y-auto">
+            <button onclick="closeHostModal()" class="absolute top-5 right-5 text-espresso/60 hover:text-espresso">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- STEP 1: Security PIN Verification -->
+            <div id="host-pin-step" class="text-center py-6 max-w-sm mx-auto">
+                <div class="w-12 h-12 bg-bronze/10 rounded-full flex items-center justify-center mx-auto mb-3 text-bronze">
+                    <i data-lucide="lock" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-serif text-2xl font-semibold mb-1">Host Verification Required</h3>
+                <p class="text-xs text-espresso/70 mb-6">Enter host security PIN to access management options.</p>
+
+                <div class="space-y-4">
+                    <input type="password" id="host-pin-input" placeholder="Enter PIN " maxlength="4" 
+                           class="w-full text-center tracking-[0.5em] text-lg font-bold bg-white border border-bronze/30 rounded-xl py-3 focus:outline-none focus:border-bronze">
+                    
+                    <button onclick="verifyHostPin()" class="w-full bg-espresso text-champagne py-3 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
+                        Authenticate Host Access
+                    </button>
+                    <p id="pin-error" class="text-xs text-red-600 hidden font-semibold">Invalid PIN. Please try again.</p>
+                </div>
+            </div>
+
+            <!-- STEP 2: Authenticated Host Panel -->
+            <div id="host-panel-step" class="hidden space-y-6">
+                <div class="flex items-center justify-between pb-4 border-b border-bronze/10">
+                    <div>
+                        <span class="text-emerald-700 text-[10px] uppercase font-bold tracking-widest block">Authenticated Session</span>
+                        <h3 class="font-serif text-2xl font-semibold text-espresso">Host Operations Dashboard</h3>
+                    </div>
+                    <button onclick="logoutHost()" class="text-xs text-red-700 underline font-medium">Exit Host Mode</button>
+                </div>
+
+                <!-- Villa Booked Dates Overview with Month/Year Filter -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-xs uppercase tracking-wider font-semibold text-espresso/80">Villa Schedules</h4>
+                        <div class="flex space-x-2">
+                            <select id="host-month-select" onchange="renderHostOverview()" class="bg-white border border-bronze/20 rounded-md text-xs font-semibold px-2 py-1">
+                                <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+                                <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+                                <option value="6" selected>Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+                                <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+                            </select>
+                            <select id="host-year-select" onchange="renderHostOverview()" class="bg-white border border-bronze/20 rounded-md text-xs font-semibold px-2 py-1">
+                                <option value="2026" selected>2026</option><option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="host-villas-overview" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Injected JS -->
+                    </div>
+                </div>
+
+                <!-- Lock Date Controls at Bottom -->
+                <div class="pt-4 border-t border-bronze/10">
+                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-3 text-espresso">Set / Lock Offline Override Date</h4>
+                    <form onsubmit="applyHostDateLock(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Select Villa</label>
+                            <select id="lock-villa-id" class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
+                                <option value="1">Rajahmundry Riverside Estate</option>
+                                <option value="2">Bhimavaram Waterway Palace</option>
+                                <option value="3">Kovvur Sanctuary Home</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Target Month/Year</label>
+                            <div class="flex space-x-1">
+                                <select id="lock-month-select" class="w-1/2 bg-white border border-bronze/20 rounded-lg p-2 text-xs">
+                                    <option value="6" selected>Jul</option><option value="7">Aug</option><option value="8">Sep</option><option value="9">Oct</option>
+                                </select>
+                                <select id="lock-year-select" class="w-1/2 bg-white border border-bronze/20 rounded-lg p-2 text-xs">
+                                    <option value="2026" selected>2026</option><option value="2027">2027</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Day (1-31)</label>
+                            <input type="number" id="lock-day-input" min="1" max="31" placeholder="e.g. 21" required class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Action</label>
+                            <select id="lock-action-type" class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
+                                <option value="locked">Lock Date</option>
+                                <option value="available">Unlock Date</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-4">
+                            <button type="submit" class="w-full bg-espresso text-champagne py-3 rounded-lg text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
+                                Update & Apply Host Calendar Lock
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // Villa Collection Data
+        const villas = [
+            {
+                id: 1,
+                tag: 'rajahmundry',
+                title: 'Rajahmundry Riverside Estate',
+                location: 'Rajahmundry, Andhra Pradesh',
+                mapUrl: 'https://maps.google.com/maps?q=Rajahmundry,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
+                rates: { hourly: '₹1,500', nightly: '₹8,500', full24hr: '₹11,500' },
+                images: {
+                    hall: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80',
+                    bedroom: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1000&q=80',
+                    kitchen: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80'
+                },
+                amenities: ['Godavari River View Deck', 'Private Swimming Pool', 'Chef Kitchen', 'High-Speed Wi-Fi'],
+                // Key format: YYYY-M-D
+                dateStatus: { '2026-6-21': 'booked', '2026-6-22': 'booked', '2026-6-28': 'locked', '2026-7-15': 'booked' }
+            },
+            {
+                id: 2,
+                tag: 'bhimavaram',
+                title: 'Bhimavaram Waterway Palace',
+                location: 'Bhimavaram, Andhra Pradesh',
+                mapUrl: 'https://maps.google.com/maps?q=Bhimavaram,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
+                rates: { hourly: '₹1,800', nightly: '₹9,800', full24hr: '₹13,000' },
+                images: {
+                    hall: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
+                    bedroom: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1000&q=80',
+                    kitchen: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1000&q=80'
+                },
+                amenities: ['Aqua Courtyard', 'Open Skylight Lounge', 'Jacuzzi Suite', '24/7 Butler Service'],
+                dateStatus: { '2026-6-25': 'booked', '2026-6-26': 'locked', '2026-7-10': 'booked' }
+            },
+            {
+                id: 3,
+                tag: 'kovvur',
+                title: 'Kovvur Sanctuary Home',
+                location: 'Kovvur, Andhra Pradesh',
+                mapUrl: 'https://maps.google.com/maps?q=Kovvur,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
+                rates: { hourly: '₹1,200', nightly: '₹6,800', full24hr: '₹9,500' },
+                images: {
+                    hall: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80',
+                    bedroom: 'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1000&q=80',
+                    kitchen: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1000&q=80'
+                },
+                amenities: ['Serene Garden Lawn', 'Private Gazebo', 'Modern Modular Kitchen', 'Power Backup'],
+                dateStatus: { '2026-6-21': 'locked', '2026-6-29': 'booked', '2026-7-18': 'booked' }
+            }
+        ];
+
+        let selectedVillaId = null;
+        let activeSelectedDate = null;
+        let activeSelectedRate = null;
+        let modalSelectedMonth = 6;
+        let modalSelectedYear = 2026;
+
+        // Helper to get total days in a given month/year
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        // Render Villa Cards
+        function renderVillas(filter = 'all') {
+            const container = document.getElementById('villas-container');
+            container.innerHTML = '';
+
+            const filtered = filter === 'all' ? villas : villas.filter(v => v.tag === filter);
+
+            filtered.forEach(v => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl overflow-hidden border border-bronze/15 flex flex-col justify-between hover:shadow-xl transition-all duration-300';
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-52 overflow-hidden group">
+                            <img src="${v.images.hall}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${v.title}">
+                            <div class="absolute top-3 right-3 bg-espresso/90 text-amberGold text-xs px-3 py-1 rounded-full font-semibold">
+                                Starts at ${v.rates.hourly} <span class="text-[9px] text-white/70">/ hr</span>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-bronze text-[10px] uppercase tracking-widest font-semibold">${v.location}</span>
+                            <h3 class="font-serif text-xl font-normal text-espresso mt-1 mb-2">${v.title}</h3>
+                            
+                            <div class="grid grid-cols-3 gap-1 bg-champagne/40 p-2 rounded-xl mb-4 text-center text-xs">
+                                <div><span class="block text-[8px] text-espresso/60 uppercase">1 Hour</span><span class="font-bold">${v.rates.hourly}</span></div>
+                                <div class="border-x border-bronze/10"><span class="block text-[8px] text-espresso/60 uppercase">Nightly</span><span class="font-bold">${v.rates.nightly}</span></div>
+                                <div><span class="block text-[8px] text-espresso/60 uppercase">24 Hours</span><span class="font-bold">${v.rates.full24hr}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5">
+                        <button onclick="openBookingModal(${v.id})" class="w-full bg-espresso text-champagne py-3 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
+                            View & Reserve Villa
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Cute Mini Calendars for Main View
+        function changeMainCalendarDate() {
+            renderMasterCalendars();
+        }
+
+        function renderMasterCalendars() {
+            const container = document.getElementById('master-calendar-grid');
+            container.innerHTML = '';
+
+            const selectedMonth = parseInt(document.getElementById('main-month-select').value);
+            const selectedYear = parseInt(document.getElementById('main-year-select').value);
+            const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
+
+            villas.forEach(v => {
+                let daysHtml = '';
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const key = `${selectedYear}-${selectedMonth}-${i}`;
+                    const status = v.dateStatus[key] || 'available';
+                    let bg = 'bg-emerald-100 text-emerald-800';
+                    if (status === 'booked') bg = 'bg-amberGold text-white';
+                    if (status === 'locked') bg = 'bg-espresso text-amberGold font-bold';
+
+                    daysHtml += `<div class="cute-mini-day ${bg}">${i}</div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-2xl border border-bronze/15 shadow-sm hover:border-bronze/40 transition-all';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2 pb-2 border-b border-bronze/10">
+                        <div>
+                            <h4 class="font-serif font-semibold text-sm text-espresso leading-tight">${v.title}</h4>
+                            <span class="text-[9px] text-espresso/60 uppercase tracking-wider">${v.location}</span>
+                        </div>
+                        <button onclick="openBookingModal(${v.id})" class="text-[10px] text-bronze font-bold hover:underline">Select</button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-0.5 text-center text-[8px] font-bold text-espresso/40 mb-1">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-y-1">
+                        ${daysHtml}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Open Residence & Interactive Selection Modal
+        function openBookingModal(id) {
+            selectedVillaId = id;
+            activeSelectedDate = null;
+            activeSelectedRate = null;
+
+            const v = villas.find(item => item.id === id);
+            if (!v) return;
+
+            renderModalContent(v);
+            document.getElementById('booking-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function updateModalCalendar() {
+            modalSelectedMonth = parseInt(document.getElementById('modal-month-select').value);
+            modalSelectedYear = parseInt(document.getElementById('modal-year-select').value);
+            const v = villas.find(item => item.id === selectedVillaId);
+            if (v) renderModalContent(v);
+        }
+
+        function renderModalContent(v) {
+            const content = document.getElementById('modal-dynamic-content');
+            const daysInMonth = getDaysInMonth(modalSelectedMonth, modalSelectedYear);
+
+            let daysHtml = '';
+            for (let i = 1; i <= daysInMonth; i++) {
+                const key = `${modalSelectedYear}-${modalSelectedMonth}-${i}`;
+                const status = v.dateStatus[key] || 'available';
+                let stateClass = 'bg-emerald-100 text-emerald-900 hover:bg-emerald-300 cursor-pointer';
+                let disabledAttr = '';
+
+                if (status === 'booked') {
+                    stateClass = 'bg-amberGold text-white opacity-60 cursor-not-allowed';
+                    disabledAttr = 'disabled';
+                } else if (status === 'locked') {
+                    stateClass = 'bg-espresso text-amberGold opacity-60 cursor-not-allowed';
+                    disabledAttr = 'disabled';
+                }
+
+                const isSelected = (activeSelectedDate === `${modalSelectedYear}-${modalSelectedMonth}-${i}`);
+                if (isSelected) {
+                    stateClass += ' selected-date';
+                }
+
+                daysHtml += `
+                    <button ${disabledAttr} onclick="selectBookingDate(${i}, this)" 
+                            class="calendar-day-btn ${stateClass} p-1">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            content.innerHTML = `
+                <div class="mb-4">
+                    <span class="text-bronze text-xs uppercase tracking-widest font-semibold">${v.location}</span>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-normal text-espresso mt-1">${v.title}</h2>
+                </div>
+
+                <!-- Interior Gallery Showcase -->
+                <div class="mb-6">
+                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Interior Spaces</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="space-y-1">
+                            <img src="${v.images.hall}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Hall">
+                            <span class="text-[10px] text-center block font-medium">Grand Hall</span>
+                        </div>
+                        <div class="space-y-1">
+                            <img src="${v.images.bedroom}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Bedroom">
+                            <span class="text-[10px] text-center block font-medium">Bedroom Suite</span>
+                        </div>
+                        <div class="space-y-1">
+                            <img src="${v.images.kitchen}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Kitchen">
+                            <span class="text-[10px] text-center block font-medium">Chef's Kitchen</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Rate Package Selector -->
+                <div class="mb-6">
+                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Step 1: Select Stay Package</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div id="rate-hourly" onclick="selectBookingRate('1 Hour (${v.rates.hourly})', 'rate-hourly')" 
+                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('1 Hour') ? 'selected-rate' : ''}">
+                            <span class="text-[10px] uppercase text-bronze font-bold block">Hourly Stay</span>
+                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.hourly}</span>
+                            <span class="text-[9px] text-espresso/60">1 Hour Access</span>
+                        </div>
+
+                        <div id="rate-nightly" onclick="selectBookingRate('1 Night (${v.rates.nightly})', 'rate-nightly')" 
+                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('1 Night') ? 'selected-rate' : ''}">
+                            <span class="text-[10px] uppercase text-bronze font-bold block">Night Stay</span>
+                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.nightly}</span>
+                            <span class="text-[9px] text-espresso/60">Overnight Package</span>
+                        </div>
+
+                        <div id="rate-24hr" onclick="selectBookingRate('24 Hours (${v.rates.full24hr})', 'rate-24hr')" 
+                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('24 Hours') ? 'selected-rate' : ''}">
+                            <span class="text-[10px] uppercase text-bronze font-bold block">24 Hours Stay</span>
+                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.full24hr}</span>
+                            <span class="text-[9px] text-espresso/60">Full Day Retreat</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Date Selector with Month & Year -->
+                <div class="mb-6 bg-white p-4 rounded-xl border border-bronze/15">
+                    <div class="flex flex-wrap items-center justify-between mb-3 gap-2">
+                        <h4 class="text-xs uppercase tracking-wider font-semibold text-espresso">Step 2: Choose Date</h4>
+                        
+                        <div class="flex items-center space-x-2">
+                            <select id="modal-month-select" onchange="updateModalCalendar()" class="bg-alabaster border border-bronze/20 text-xs font-semibold rounded-lg px-2 py-1 text-espresso">
+                                ${monthNames.map((m, idx) => `<option value="${idx}" ${idx === modalSelectedMonth ? 'selected' : ''}>${m}</option>`).join('')}
+                            </select>
+                            <select id="modal-year-select" onchange="updateModalCalendar()" class="bg-alabaster border border-bronze/20 text-xs font-semibold rounded-lg px-2 py-1 text-espresso">
+                                <option value="2026" ${modalSelectedYear === 2026 ? 'selected' : ''}>2026</option>
+                                <option value="2027" ${modalSelectedYear === 2027 ? 'selected' : ''}>2027</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-espresso/40 mb-1">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1">
+                        ${daysHtml}
+                    </div>
+                    <span id="selected-date-indicator" class="text-xs font-bold text-bronze block mt-2 text-center">
+                        ${activeSelectedDate ? `Selected Date: ${activeSelectedDate}` : 'No Date Selected'}
+                    </span>
+                </div>
+
+                <!-- Location Map Embed -->
+                <div class="mb-6">
+                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Google Map Location</h4>
+                    <div class="w-full h-36 rounded-xl overflow-hidden border border-bronze/20">
+                        <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="${v.mapUrl}"></iframe>
+                    </div>
+                </div>
+
+                <!-- Action & WhatsApp Direct Link -->
+                <div class="space-y-3">
+                    <button id="confirm-booking-btn" onclick="executeBookingAction()" 
+                            class="w-full bg-espresso text-champagne py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all duration-300 shadow-md">
+                        Confirm Selection
+                    </button>
+                    
+                    <a id="whatsapp-direct-link" href="#" target="_blank" 
+                       class="hidden w-full bg-emerald-600 text-white py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 shadow-lg btn-success-anim">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Send Pre-Filled WhatsApp Booking Message</span>
+                    </a>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        // Selection Handlers
+        function selectBookingRate(rateLabel, elementId) {
+            activeSelectedRate = rateLabel;
+            document.querySelectorAll('.rate-card-option').forEach(el => el.classList.remove('selected-rate'));
+            document.getElementById(elementId).classList.add('selected-rate');
+        }
+
+        function selectBookingDate(day, element) {
+            activeSelectedDate = `${modalSelectedYear}-${monthNames[modalSelectedMonth]}-${day}`;
+            document.querySelectorAll('.calendar-day-btn').forEach(el => el.classList.remove('selected-date'));
+            element.classList.add('selected-date');
+            document.getElementById('selected-date-indicator').innerText = `Selected Date: ${activeSelectedDate}`;
+        }
+
+        function executeBookingAction() {
+            if (!activeSelectedRate) {
+                alert('Please select a Stay Package first.');
+                return;
+            }
+            if (!activeSelectedDate) {
+                alert('Please select an available date on the calendar.');
+                return;
+            }
+
+            const v = villas.find(item => item.id === selectedVillaId);
+            const btn = document.getElementById('confirm-booking-btn');
+            const waBtn = document.getElementById('whatsapp-direct-link');
+
+            btn.className = 'w-full py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold transition-all btn-success-anim';
+            btn.innerText = '✓ Date & Rate Selected Successfully!';
+
+            const message = `Hello Srinivas Service Homes,%0A%0AI would like to confirm a booking for:%0A• *Villa:* ${v.title} (${v.location})%0A• *Package:* ${activeSelectedRate}%0A• *Booking Date:* ${activeSelectedDate}%0A%0APlease assist with confirmation.`;
+            const waUrl = `https://wa.me/917780376043?text=${message}`;
+
+            waBtn.href = waUrl;
+            waBtn.classList.remove('hidden');
+        }
+
+        // Host Security Operations
+        function openHostSecurityModal() {
+            document.getElementById('host-modal').classList.remove('hidden');
+        }
+
+        function closeHostModal() {
+            document.getElementById('host-modal').classList.add('hidden');
+        }
+
+        function verifyHostPin() {
+            const pin = document.getElementById('host-pin-input').value;
+            const err = document.getElementById('pin-error');
+
+            if (pin === '1234') {
+                err.classList.add('hidden');
+                document.getElementById('host-pin-step').classList.add('hidden');
+                document.getElementById('host-panel-step').classList.remove('hidden');
+                renderHostOverview();
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        function logoutHost() {
+            document.getElementById('host-pin-input').value = '';
+            document.getElementById('host-pin-step').classList.remove('hidden');
+            document.getElementById('host-panel-step').classList.add('hidden');
+            closeHostModal();
+        }
+
+        function renderHostOverview() {
+            const container = document.getElementById('host-villas-overview');
+            container.innerHTML = '';
+
+            const hostMonth = parseInt(document.getElementById('host-month-select').value);
+            const hostYear = parseInt(document.getElementById('host-year-select').value);
+            const daysInMonth = getDaysInMonth(hostMonth, hostYear);
+
+            villas.forEach(v => {
+                let daysHtml = '';
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const key = `${hostYear}-${hostMonth}-${i}`;
+                    const status = v.dateStatus[key] || 'available';
+                    let bg = 'bg-emerald-100 text-emerald-800';
+                    if (status === 'booked') bg = 'bg-amberGold text-white';
+                    if (status === 'locked') bg = 'bg-espresso text-amberGold font-bold';
+
+                    daysHtml += `<div class="cute-mini-day ${bg}">${i}</div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'bg-white p-3 rounded-xl border border-bronze/20';
+                card.innerHTML = `
+                    <span class="font-serif font-semibold text-xs text-espresso block mb-1">${v.title}</span>
+                    <div class="grid grid-cols-7 gap-0.5 text-center text-[8px] font-bold text-espresso/40 mb-1">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-y-1">${daysHtml}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyHostDateLock(e) {
+            e.preventDefault();
+            const villaId = parseInt(document.getElementById('lock-villa-id').value);
+            const month = parseInt(document.getElementById('lock-month-select').value);
+            const year = parseInt(document.getElementById('lock-year-select').value);
+            const day = parseInt(document.getElementById('lock-day-input').value);
+            const action = document.getElementById('lock-action-type').value;
+
+            const target = villas.find(v => v.id === villaId);
+            const daysInMonth = getDaysInMonth(month, year);
+
+            if (target && day >= 1 && day <= daysInMonth) {
+                const key = `${year}-${month}-${day}`;
+                if (action === 'available') {
+                    delete target.dateStatus[key];
+                } else {
+                    target.dateStatus[key] = 'locked';
+                }
+
+                renderVillas();
+                renderMasterCalendars();
+                renderHostOverview();
+                alert(`Host Calendar Updated: ${monthNames[month]} ${day}, ${year} for ${target.title} set to ${action}.`);
+            }
+        }
+
+        function filterVillas(tag) {
+            document.querySelectorAll('.loc-btn').forEach(btn => {
+                btn.classList.remove('bg-espresso', 'text-alabaster');
+                btn.classList.add('hover:bg-bronze/10');
+            });
+            event.target.classList.add('bg-espresso', 'text-alabaster');
+            renderVillas(tag);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderVillas();
+            renderMasterCalendars();
+        });
+    </script>
+</body>
+</html>

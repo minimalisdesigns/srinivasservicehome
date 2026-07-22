@@ -1,894 +1,1023 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRINIVAS SERVICE HOMES | Luxury Serviced Residences</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        alabaster: '#FBF9F5',
-                        espresso: '#1A1615',
-                        bronze: '#8C6D46',
-                        amberGold: '#D4A359',
-                        champagne: '#F3EAD8',
-                        emeraldSuccess: '#059669',
-                    },
-                    fontFamily: {
-                        serif: ['Playfair Display', 'Georgia', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #FBF9F5; }
-        ::-webkit-scrollbar-thumb { background: #8C6D46; border-radius: 4px; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Srinivas Service Home | Premium Luxury Stays</title>
 
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lottie Player CDN (Official LottieFiles Web Component) -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <!-- React & ReactDOM CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel CDN -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Framer Motion CDN -->
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: '#C5A059',
+            pearl: '#FDFBF7',
+            cream: '#FAF6F0',
+            charcoal: '#1A1815'
+          }
+        }
+      }
+    }
+  </script>
+
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1A1815;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Base Glassmorphism Styles with Smooth Transitions */
         .glass-card {
-            background: rgba(251, 249, 245, 0.85);
+            background: rgba(253, 251, 247, 0.90);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(212, 163, 89, 0.25);
-        }
-        .glass-dark {
-            background: rgba(26, 22, 21, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 163, 89, 0.3);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Cute Mini Calendar Styling */
-        .cute-mini-day {
-            width: 26px;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.65rem;
-            font-weight: 600;
-            margin: auto;
-            transition: all 0.2s ease;
+        /* Around Line 58 */
+        .glass-card-dark {
+            background: rgba(0, 0, 0, 0.30); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Luxury Gold Glow & Elevate Hover Effect for Property Cards */
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(197, 160, 89, 0.8);
+            box-shadow: 0 20px 40px -15px rgba(197, 160, 89, 0.25),
+                        0 0 20px 2px rgba(197, 160, 89, 0.15);
         }
 
-        .calendar-day-btn {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .calendar-day-btn.selected-date {
-            background-color: #8C6D46 !important;
-            color: #ffffff !important;
-            box-shadow: 0 0 12px rgba(140, 109, 70, 0.6);
-            transform: scale(1.15);
-        }
-
-        .rate-card-option.selected-rate {
-            border-color: #8C6D46 !important;
-            background-color: #F3EAD8 !important;
-            box-shadow: 0 4px 15px rgba(140, 109, 70, 0.25);
+        /* Golden Light Beam Shimmer Effect across Cards */
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+            60deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 70%
+            );
+            transform: rotate(30deg);
+            transition: transform 0.8s ease;
+            pointer-events: none;
+            opacity: 0;
         }
 
-        @keyframes successPulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(5, 150, 105, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        .glass-card:hover::after {
+            transform: rotate(30deg) translate(20%, 20%);
+            opacity: 1;
         }
-        .btn-success-anim {
-            animation: successPulse 1.5s infinite;
-            background-color: #059669 !important;
-            color: #ffffff !important;
+
+        /* Interactive Button pulse animation within boxes */
+        button, a {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Entrance Fade-In Up Keyframes for Box Elements */
+        @keyframes luxuryBoxFade {
+            0% {
+            opacity: 0;
+            transform: translateY(25px);
+            }
+            100% {
+            opacity: 1;
+            transform: translateY(0);
+            }
+        }
+
+        .animate-box-entry {
+            animation: luxuryBoxFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
-<body class="bg-alabaster text-espresso font-sans antialiased selection:bg-amberGold selection:text-white relative overflow-x-hidden">
+<body class="selection:bg-[#C5A059] selection:text-white">
 
-    <!-- Header Navigation -->
-    <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300 glass-card border-b border-bronze/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-            <a href="#" class="flex flex-col">
-                <span class="font-serif tracking-[0.2em] text-lg sm:text-xl font-bold uppercase text-espresso">Srinivas</span>
-                <span class="text-[9px] tracking-[0.35em] text-bronze uppercase -mt-1 font-medium">Service Homes</span>
-            </a>
+  <!-- React Mount Root -->
+  <div id="root"></div>
 
-            <!-- Navigation Links -->
-            <nav class="hidden lg:flex items-center space-x-8 text-xs uppercase tracking-[0.2em] font-medium text-espresso/80">
-                <a href="#villas" class="hover:text-bronze transition-colors">Our Villas</a>
-                <a href="#calendar-section" class="hover:text-bronze transition-colors">Availability Matrix</a>
-                <a href="#contact" class="hover:text-bronze transition-colors">Contact Us</a>
-            </nav>
+  <!-- React Application Logic -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { motion, AnimatePresence } = window.Motion;
 
-            <div class="flex items-center space-x-3">
-                <a href="https://wa.me/917780376043?text=Hello%20Srinivas%20Service%20Homes,%20I%20would%20like%20to%20inquire%20about%20villa%20availability." 
-                   target="_blank" 
-                   class="flex items-center space-x-1.5 bg-emerald-600 text-white text-xs px-3.5 py-2.5 rounded-full hover:bg-emerald-700 transition-all shadow-md font-semibold">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">WhatsApp</span>
+    const PROPERTIES = [
+      {
+        id: 'rajahmundry',
+        name: 'Rajahmundry Stay',
+        city: 'Rajahmundry',
+        tagline: 'Riverfront Panoramic Residence',
+        mapLink: 'https://maps.google.com/?q=Rajahmundry',
+        features: ['Riverfront Deck', 'Chef Kitchen', 'Jacuzzi Suite', '24/7 Butler Service'],
+        specifications: { sqft: '4,800 Sq.Ft', bedrooms: '4 Luxury Suites', bathrooms: '5 En-Suite Baths' },
+        slides: [
+          { title: 'Grand Living Hall', url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Master Royal Bedroom', url: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Gourmet Island Kitchen', url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Riverview Balcony Deck', url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Marble En-Suite Bath', url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Private Jacuzzi & Spa', url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Formal Dining Area', url: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Executive Lounge', url: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Sunset Terrace View', url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Entrance Foyer', url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80' }
+        ]
+      },
+      {
+        id: 'bhimavaram',
+        name: 'Bhimavaram Stay',
+        city: 'Bhimavaram',
+        tagline: 'Penthouse & Sky Residence',
+        mapLink: 'https://maps.google.com/?q=Bhimavaram',
+        features: ['Skyline Infinity Pool', 'Smart Home Controls', 'Private Bar Lounge', 'Terrace Garden'],
+        specifications: { sqft: '5,200 Sq.Ft', bedrooms: '5 Executive Suites', bathrooms: '6 En-Suite Baths' },
+        slides: [
+          { title: 'Penthouse Living Room', url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Royal Sky Bedroom', url: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Modular Island Kitchen', url: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Skyline Terrace Balcony', url: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Infinity Pool Deck', url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Opulent Bath Sanctuary', url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Private Bar Lounge', url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Breakfast Bar', url: 'https://images.unsplash.com/photo-1556909212-d5b604d0c90d?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Ambient TV Lounge', url: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Luxury Hall Corridor', url: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80' }
+        ]
+      },
+      {
+        id: 'kovvur',
+        name: 'Kovvur Stay',
+        city: 'Kovvur',
+        tagline: 'Tranquil Villa Sanctuary',
+        mapLink: 'https://maps.google.com/?q=Kovvur',
+        features: ['Private Courtyard Lawn', 'Rustic Luxury Kitchen', 'Plunge Spa', 'Private Dining Room'],
+        specifications: { sqft: '4,200 Sq.Ft', bedrooms: '3 Villa Suites', bathrooms: '4 En-Suite Baths' },
+        slides: [
+          { title: 'Courtyard Villa Hall', url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Garden View Bedroom', url: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Artisan Gourmet Kitchen', url: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Veranda Garden Balcony', url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Plunge Spa Bath', url: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Patio Outdoor Lounge', url: 'https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Private Dining Room', url: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Reading Nook', url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Lawn Garden View', url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80' },
+          { title: 'Poolside Deck', url: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=80' }
+        ]
+      }
+    ];
+
+    const HOST_PHONE = '+917780376043';
+    const DISPLAY_PHONE = '+91 77803 76043';
+    const SECRET_PIN = '7780';
+
+    function PropertyCard({ prop, onOpenSidebar, index }) {
+      const [slideIndex, setSlideIndex] = useState(0);
+
+      const nextSlide = (e) => {
+        e.stopPropagation();
+        setSlideIndex((prev) => (prev + 1) % prop.slides.length);
+      };
+
+      const prevSlide = (e) => {
+        e.stopPropagation();
+        setSlideIndex((prev) => (prev - 1 + prop.slides.length) % prop.slides.length);
+      };
+
+      return (
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: index * 0.15 }}
+          whileHover={{ y: -8 }}
+          className="group glass-card rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-2xl flex flex-col justify-between border border-[#C5A059]/30"
+        >
+          {/* SLIDER IMAGE WITH SLIDE ARROWS */}
+          <div className="relative h-64 md:h-72 overflow-hidden select-none">
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={slideIndex}
+                src={prop.slides[slideIndex].url}
+                alt={prop.slides[slideIndex].title}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="w-full h-full object-cover"
+              />
+            </AnimatePresence>
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+
+            {/* City Badge */}
+            <span className="absolute top-4 left-4 text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur-md px-3.5 py-1 rounded-full text-[#1A1815] shadow-md border border-[#C5A059]/40">
+              {prop.city}
+            </span>
+
+            {/* Slide Details Label */}
+            <span className="absolute bottom-4 left-4 text-xs font-medium bg-black/75 backdrop-blur-md px-3 py-1 rounded-lg text-white border border-white/20">
+              📍 {prop.slides[slideIndex].title} ({slideIndex + 1}/{prop.slides.length})
+            </span>
+
+            {/* LEFT SLIDE ARROW */}
+            <button 
+              onClick={prevSlide}
+              aria-label="Previous Photo"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C5A059] text-white flex items-center justify-center transition backdrop-blur-sm border border-white/20 hover:scale-110 active:scale-95 shadow-lg z-10"
+            >
+              <i data-lucide="chevron-left" className="w-6 h-6"></i>
+            </button>
+
+            {/* RIGHT SLIDE ARROW */}
+            <button 
+              onClick={nextSlide}
+              aria-label="Next Photo"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C5A059] text-white flex items-center justify-center transition backdrop-blur-sm border border-white/20 hover:scale-110 active:scale-95 shadow-lg z-10"
+            >
+              <i data-lucide="chevron-right" className="w-6 h-6"></i>
+            </button>
+
+            {/* Top Right Breakdown Button */}
+            <button 
+              onClick={() => onOpenSidebar(prop)}
+              className="absolute top-4 right-4 bg-[#C5A059] text-white p-2 rounded-full shadow-lg hover:scale-110 transition text-xs font-bold flex items-center space-x-1 px-3 z-10"
+            >
+              <span>Details</span>
+              <i data-lucide="layout" className="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif font-bold text-[#1A1815]">{prop.name}</h3>
+              <p className="text-xs text-neutral-500">{prop.tagline}</p>
+
+              <div className="grid grid-cols-2 gap-2 py-3 border-y border-neutral-200/80">
+                {prop.features.map((feat, i) => (
+                  <div key={i} className="flex items-center space-x-2 text-xs text-neutral-700">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] uppercase text-neutral-400 block font-semibold">Rate</span>
+                <span className="text-xl font-bold text-[#C5A059]">₹2,500 <span className="text-xs font-normal text-neutral-500">/ 1 hr</span></span>
+              </div>
+              <button 
+                onClick={() => onOpenSidebar(prop)}
+                className="px-4 py-2 rounded-full border border-[#C5A059] text-[#C5A059] text-xs font-bold hover:bg-[#C5A059] hover:text-white transition duration-300"
+              >
+                View Residence
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      );
+    }
+
+    function App() {
+      const [showSplash, setShowSplash] = useState(true);
+      const [activeSidebarProperty, setActiveSidebarProperty] = useState(null);
+
+      const [selectedProperty, setSelectedProperty] = useState(PROPERTIES[0].id);
+      const [stayDuration, setStayDuration] = useState('24h');
+      
+      const [bookingDate, setBookingDate] = useState('');
+      const [bookingTime, setBookingTime] = useState('12:00');
+      const [exitDate, setExitDate] = useState('');
+      const [exitTime, setExitTime] = useState('12:00');
+
+      const [guestDetails, setGuestDetails] = useState({ name: '', phone: '', email: '' });
+      
+      const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+      const [isHostLoginOpen, setIsHostLoginOpen] = useState(false);
+      const [hostPinInput, setHostPinInput] = useState('');
+      const [isHostAuthenticated, setIsHostAuthenticated] = useState(false);
+      const [pinError, setPinError] = useState(false);
+      const [bookings, setBookings] = useState([]);
+
+      const price = stayDuration === '1h' ? 2500 : 5000;
+
+      useEffect(() => {
+        if (!bookingDate || !bookingTime) return;
+        const checkIn = new Date(`${bookingDate}T${bookingTime}`);
+        if (isNaN(checkIn.getTime())) return;
+
+        let exit = new Date(checkIn);
+        if (stayDuration === '1h') {
+          exit.setHours(exit.getHours() + 1);
+        } else {
+          exit.setDate(exit.getDate() + 1);
+        }
+
+        setExitDate(exit.toISOString().split('T')[0]);
+        setExitTime(exit.toTimeString().substring(0, 5));
+      }, [bookingDate, bookingTime, stayDuration]);
+
+      useEffect(() => {
+        lucide.createIcons();
+        const saved = localStorage.getItem('srinivas_bookings');
+        if (saved) {
+          try { setBookings(JSON.parse(saved)); } catch (e) { console.error(e); }
+        }
+      }, []);
+
+      useEffect(() => {
+        lucide.createIcons();
+      }, [isCheckoutOpen, isHostLoginOpen, isHostAuthenticated, showSplash, activeSidebarProperty]);
+
+      const saveBooking = (newBooking) => {
+        const updated = [newBooking, ...bookings];
+        setBookings(updated);
+        localStorage.setItem('srinivas_bookings', JSON.stringify(updated));
+      };
+
+      const handleBookingSubmit = (e) => {
+        e.preventDefault();
+        setIsCheckoutOpen(true);
+      };
+
+      const finalizeBooking = () => {
+        const propertyObj = PROPERTIES.find(p => p.id === selectedProperty);
+        const newBooking = {
+          id: 'SSH-' + Math.floor(100000 + Math.random() * 900000),
+          property: propertyObj.name,
+          city: propertyObj.city,
+          duration: stayDuration === '1h' ? '1 Hour Short Stay' : '24 Hours / 1 Night',
+          checkInDate: bookingDate,
+          checkInTime: bookingTime,
+          checkOutDate: exitDate,
+          checkOutTime: exitTime,
+          guestName: guestDetails.name,
+          guestPhone: guestDetails.phone,
+          amount: price,
+          status: 'Active'
+        };
+
+        saveBooking(newBooking);
+
+        const message = encodeURIComponent(
+          `*NEW LUXURY RESERVATION*\n` +
+          `---------------------------\n` +
+          `*Booking ID:* ${newBooking.id}\n` +
+          `*Property:* ${newBooking.property}\n` +
+          `*Guest Name:* ${newBooking.guestName}\n` +
+          `*Phone:* ${newBooking.guestPhone}\n` +
+          `*Check-In:* ${newBooking.checkInDate} at ${newBooking.checkInTime}\n` +
+          `*Expected Exit:* ${newBooking.checkOutDate} at ${newBooking.checkOutTime}\n` +
+          `*Duration:* ${newBooking.duration}\n` +
+          `*Total Amount:* ₹${newBooking.amount.toLocaleString('en-IN')}\n\n` +
+          `Payment verified via Paytm UPI.`
+        );
+
+        window.open(`https://wa.me/${HOST_PHONE.replace('+', '')}?text=${message}`, '_blank');
+        setIsCheckoutOpen(false);
+      };
+
+      const markGuestCheckedOut = (id) => {
+        const updated = bookings.map(b => b.id === id ? { ...b, status: 'Completed' } : b);
+        setBookings(updated);
+        localStorage.setItem('srinivas_bookings', JSON.stringify(updated));
+      };
+
+      const handleHostAuth = (e) => {
+        e.preventDefault();
+        if (hostPinInput === SECRET_PIN) {
+          setIsHostAuthenticated(true);
+          setIsHostLoginOpen(false);
+          setPinError(false);
+          setHostPinInput('');
+        } else {
+          setPinError(true);
+        }
+      };
+
+      return (
+        <div className="min-h-screen">
+          
+          {/* --- 1. LOTTIE ANIMATION ENTRANCE SCREEN --- */}
+          <AnimatePresence>
+            {showSplash && (
+              <motion.div 
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                transition={{ duration: 0.8 }}
+                className="fixed inset-0 z-50 bg-[#FDFBF7] flex flex-col items-center justify-center p-6 text-center"
+              >
+                {/* Official Direct Lottie Web Component Player with reliable JSON vector animation */}
+                <div className="w-64 h-64 md:w-80 md:h-80 mb-4 flex items-center justify-center">
+                 <img 
+                        src="House.svg" 
+                        alt="House Animation" 
+                        className="w-full h-full object-contain"
+                    />
+                </div>
+
+                <motion.h1 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-3xl md:text-5xl font-serif font-extrabold tracking-widest text-[#1A1815] uppercase mb-2"
+                >
+                  Srinivas Service Home
+                </motion.h1>
+
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-xs uppercase tracking-[0.35em] text-[#C5A059] font-bold mb-8"
+                >
+                  Luxurious Stay • Rajahmundry • Bhimavaram • Kovvur
+                </motion.p>
+
+                <motion.button 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.6 }}
+                  onClick={() => setShowSplash(false)}
+                  className="px-10 py-4 rounded-full bg-gradient-to-r from-[#C5A059] via-[#D4AF37] to-[#C5A059] text-white font-extrabold tracking-widest text-xs uppercase shadow-xl hover:scale-105 transition duration-300"
+                >
+                  Enter Experience
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* MAIN NAVBAR */}
+          <nav className="sticky top-0 z-40 glass-card border-b border-[#C5A059]/30 px-6 py-4 shadow-sm">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl font-serif font-extrabold tracking-wider text-[#1A1815]">
+                  SRINIVAS
+                </span>
+                <span className="text-xs tracking-widest text-[#C5A059] font-bold uppercase border-l border-[#C5A059]/40 pl-2">
+                  Service Home
+                </span>
+              </div>
+
+              <div className="hidden md:flex items-center space-x-8 text-xs uppercase tracking-wider font-semibold text-[#1A1815]">
+                <a href="#properties" className="hover:text-[#C5A059] transition">Residences</a>
+                <a href="#booking" className="hover:text-[#C5A059] transition">Reserve</a>
+                <a href="#contact" className="hover:text-[#C5A059] transition">Contact</a>
+              </div>
+
+              <button 
+                onClick={() => setIsHostLoginOpen(true)}
+                className="flex items-center space-x-2 text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-[#C5A059]/50 text-[#C5A059] font-bold hover:bg-[#C5A059] hover:text-white transition duration-300"
+              >
+                <i data-lucide="lock" className="w-3.5 h-3.5"></i>
+                <span>{isHostAuthenticated ? 'Host Portal' : 'Host Login'}</span>
+              </button>
+            </div>
+          </nav>
+
+          {/* HERO SECTION WITH VIDEO ANIMATION BACKGROUND */}
+          <section className="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover filter brightness-75 scale-105"
+              >
+                <source src="house-bg.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/40 to-black/30" />
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative z-10 max-w-4xl text-center space-y-6 glass-card-dark p-8 md:p-12 rounded-3xl border border-[#C5A059]/40 text-white shadow-2xl my-16 mb-10"
+            >
+              <span className="inline-block text-xs uppercase tracking-[0.3em] text-[#C5A059] font-bold px-4 py-1.5 border border-[#C5A059]/40 rounded-full bg-black/40 backdrop-blur-md">
+                Unrivaled Private Luxury Stays
+              </span>
+              <h1 className="text-4xl md:text-7xl font-serif font-extrabold tracking-tight text-amber-100">
+                Srinivas Service Home
+              </h1>
+              <p className="text-base md:text-xl text-neutral-300 max-w-2xl mx-auto font-light leading-relaxed">
+                Experience ultra-luxurious private stays across Rajahmundry, Bhimavaram, and Kovvur with 24/7 concierge & automated reservations.
+              </p>
+
+              <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+                <a href="#booking" className="px-8 py-4 rounded-full bg-[#C5A059] text-white font-bold tracking-wider text-xs uppercase hover:bg-amber-600 transition shadow-lg shadow-[#C5A059]/30">
+                  Book Experience
                 </a>
+                <a href="#properties" className="px-8 py-4 rounded-full border border-[#C5A059] text-white font-bold tracking-wider text-xs uppercase hover:bg-white/10 transition">
+                  Explore Residences
+                </a>
+              </div>
+            </motion.div>
+          </section>
 
-                <button onclick="openHostSecurityModal()" class="flex items-center space-x-1.5 text-xs uppercase tracking-wider px-3.5 py-2.5 border border-bronze/30 rounded-full hover:bg-bronze hover:text-white transition-all">
-                    <i data-lucide="shield-lock" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Host Access</span>
-                </button>
+          {/* PROPERTY SHOWCASE */}
+          <section id="properties" className="py-24 px-6 max-w-7xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center space-y-3 mb-16"
+            >
+              <h2 className="text-xs uppercase tracking-[0.3em] text-[#C5A059] font-bold">Interactive Room Tour</h2>
+              <p className="text-3xl md:text-5xl font-serif font-bold text-[#1A1815]">Our 3 Luxury Residences</p>
+              <p className="text-xs text-neutral-500">Use slide arrows (&lt; &gt;) to tour 10 views of Living Rooms, Kitchens, Master Bedrooms & Balconies</p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {PROPERTIES.map((prop, idx) => (
+                <PropertyCard key={prop.id} prop={prop} index={idx} onOpenSidebar={(p) => setActiveSidebarProperty(p)} />
+              ))}
             </div>
-        </div>
-    </header>
+          </section>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <div class="absolute inset-0 z-0">
-            <img id="hero-bg" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80" 
-                 class="w-full h-full object-cover filter brightness-[0.82] contrast-[1.05] transition-all duration-700" alt="Srinivas Service Homes Header">
-            <div class="absolute inset-0 bg-gradient-to-t from-alabaster via-transparent to-espresso/40"></div>
-        </div>
+          {/* SIDEBAR DRAWER */}
+          <AnimatePresence>
+            {activeSidebarProperty && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end"
+              >
+                <motion.div 
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                  className="bg-white max-w-md w-full h-full shadow-2xl p-6 md:p-8 overflow-y-auto space-y-6 relative border-l border-[#C5A059]/40"
+                >
+                  <button 
+                    onClick={() => setActiveSidebarProperty(null)}
+                    className="absolute top-6 right-6 p-2 rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                  >✕</button>
 
-        <div class="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto mt-10">
-            <span class="text-amberGold text-xs uppercase tracking-[0.4em] font-semibold mb-3 block">Luxury Serviced Villas in Andhra Pradesh</span>
-            <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal text-white drop-shadow-md leading-tight mb-6">
-                Rajahmundry • Bhimavaram • Kovvur
-            </h1>
-            <p class="text-alabaster/90 text-sm sm:text-base font-light max-w-2xl mx-auto mb-8 leading-relaxed">
-                Experience ultra-luxury private serviced homes available for short-stay hourly retreats, nightly packages, or complete 24-hour stays.
-            </p>
-            
-            <div class="glass-card p-2 rounded-full inline-flex flex-wrap justify-center gap-2 max-w-full shadow-2xl border border-white/20">
-                <button onclick="filterVillas('all')" class="loc-btn active px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all bg-espresso text-alabaster">All Locations</button>
-                <button onclick="filterVillas('rajahmundry')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Rajahmundry</button>
-                <button onclick="filterVillas('bhimavaram')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Bhimavaram</button>
-                <button onclick="filterVillas('kovvur')" class="loc-btn px-5 py-2 rounded-full text-xs uppercase tracking-wider font-medium transition-all hover:bg-bronze/10">Kovvur</button>
-            </div>
-        </div>
-    </section>
+                  <div className="space-y-2 pt-4">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#C5A059]">Property Breakdown</span>
+                    <h3 className="text-3xl font-serif font-bold text-[#1A1815]">{activeSidebarProperty.name}</h3>
+                    <p className="text-xs text-neutral-500">{activeSidebarProperty.tagline}</p>
+                  </div>
 
-    <!-- Main Content Grid with Sidebar Gallery -->
-    <section id="villas" class="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col lg:flex-row gap-8">
-            
-            <!-- Left Sidebar: Realistic Preview Gallery & Quick Reach -->
-            <aside class="w-full lg:w-1/3 space-y-6">
-                <div class="glass-card p-6 rounded-2xl border border-bronze/20 shadow-md">
-                    <span class="text-bronze text-[10px] uppercase tracking-[0.25em] font-semibold block mb-1">Sidebar Showcase</span>
-                    <h3 class="font-serif text-xl font-normal text-espresso mb-4">Realistic Villa Interiors</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
-                            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Royal Living Lounge">
-                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
-                                <span class="text-white text-xs font-serif">Grand Living Lounge</span>
-                            </div>
-                        </div>
-
-                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
-                            <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Master Suite Bed">
-                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
-                                <span class="text-white text-xs font-serif">Master Suite Bedroom</span>
-                            </div>
-                        </div>
-
-                        <div class="group relative rounded-xl overflow-hidden border border-bronze/10 h-40">
-                            <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt="Gourmet Kitchen">
-                            <div class="absolute inset-0 bg-gradient-to-t from-espresso/80 via-transparent to-transparent flex items-end p-3">
-                                <span class="text-white text-xs font-serif">Chef's Modern Kitchen</span>
-                            </div>
-                        </div>
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold uppercase text-[#1A1815] border-b border-neutral-200 pb-2">Specifications</p>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="bg-[#FAF6F0] p-3 rounded-xl border border-neutral-200">
+                        <span className="text-neutral-400 block text-[10px]">Area</span>
+                        <span className="font-bold text-[#1A1815]">{activeSidebarProperty.specifications.sqft}</span>
+                      </div>
+                      <div className="bg-[#FAF6F0] p-3 rounded-xl border border-neutral-200">
+                        <span className="text-neutral-400 block text-[10px]">Bedrooms</span>
+                        <span className="font-bold text-[#1A1815]">{activeSidebarProperty.specifications.bedrooms}</span>
+                      </div>
                     </div>
+                  </div>
 
-                    <!-- Direct Contact Badge -->
-                    <div class="mt-6 pt-4 border-t border-bronze/10 text-center">
-                        <p class="text-xs text-espresso/70 mb-1">Direct Booking Assistance:</p>
-                        <a href="tel:7780376043" class="font-serif text-lg font-bold text-bronze hover:underline flex items-center justify-center space-x-2">
-                            <i data-lucide="phone" class="w-4 h-4"></i>
-                            <span>+91 7780376043</span>
-                        </a>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Right Main Container: Villas Showcase Cards -->
-            <main class="w-full lg:w-2/3">
-                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8">
-                    <div>
-                        <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Featured Properties</span>
-                        <h2 class="font-serif text-3xl sm:text-4xl font-normal text-espresso mt-1">Select A Villa Stay</h2>
-                    </div>
-                </div>
-
-                <div id="villas-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Injected via JavaScript -->
-                </div>
-            </main>
-        </div>
-    </section>
-
-    <!-- Master Cute Mini Occupancy Calendar Section (User View) -->
-    <section id="calendar-section" class="py-16 bg-champagne/40 border-y border-bronze/10 px-4 sm:px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
-                <div>
-                    <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Live Availability Matrix</span>
-                    <h2 class="font-serif text-2xl sm:text-3xl font-normal text-espresso mt-1">Property Occupancy View</h2>
-                </div>
-
-                <!-- Month & Year Controls for Main View -->
-                <div class="flex flex-wrap items-center gap-3 mt-4 md:mt-0">
-                    <div class="flex items-center space-x-2 bg-white/90 border border-bronze/20 rounded-full px-3 py-1.5 shadow-sm">
-                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-bronze"></i>
-                        <select id="main-month-select" onchange="changeMainCalendarDate()" class="bg-transparent text-xs font-semibold text-espresso focus:outline-none">
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                            <option value="2">March</option>
-                            <option value="3">April</option>
-                            <option value="4">May</option>
-                            <option value="5">June</option>
-                            <option value="6" selected>July</option>
-                            <option value="7">August</option>
-                            <option value="8">September</option>
-                            <option value="9">October</option>
-                            <option value="10">November</option>
-                            <option value="11">December</option>
-                        </select>
-                        <select id="main-year-select" onchange="changeMainCalendarDate()" class="bg-transparent text-xs font-semibold text-espresso focus:outline-none border-l border-bronze/20 pl-2">
-                            <option value="2026" selected>2026</option>
-                            <option value="2027">2027</option>
-                        </select>
-                    </div>
-
-                    <div class="flex items-center space-x-3 text-[11px] tracking-wider font-medium bg-white/60 px-3 py-1.5 rounded-full border border-bronze/10">
-                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Avail</span></div>
-                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-amberGold"></span><span>Booked</span></div>
-                        <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-espresso"></span><span>Locked</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cute Mini-Calendar Cards Grid -->
-            <div id="master-calendar-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Injected via JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact & Map Section -->
-    <section id="contact" class="py-20 px-4 sm:px-6 max-w-7xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-12">
-            <span class="text-bronze text-xs uppercase tracking-[0.3em] font-semibold">Get In Touch</span>
-            <h2 class="font-serif text-3xl font-normal text-espresso mt-1">Personal Hospitality Concierge</h2>
-            <p class="text-espresso/70 text-sm mt-2">Reach out directly via phone or WhatsApp for instant luxury bookings across Rajahmundry, Bhimavaram & Kovvur.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
-                <div class="w-12 h-12 bg-bronze/10 text-bronze rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i data-lucide="phone-call" class="w-5 h-5"></i>
-                </div>
-                <h4 class="font-serif text-lg font-semibold mb-1">Direct Call</h4>
-                <a href="tel:7780376043" class="text-bronze font-bold text-base hover:underline block mb-1">7780376043</a>
-                <span class="text-xs text-espresso/60">24/7 Concierge Service</span>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
-                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i data-lucide="message-square" class="w-5 h-5"></i>
-                </div>
-                <h4 class="font-serif text-lg font-semibold mb-1">Host WhatsApp</h4>
-                <a href="https://wa.me/917780376043?text=Hello%20Srinivas%20Service%20Homes,%20I%20want%20to%20book%20a%20villa." target="_blank" class="text-emerald-700 font-bold text-base hover:underline block mb-1">+91 7780376043</a>
-                <span class="text-xs text-espresso/60">Instant Automated Reservations</span>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl border border-bronze/20 text-center">
-                <div class="w-12 h-12 bg-bronze/10 text-bronze rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i data-lucide="map-pin" class="w-5 h-5"></i>
-                </div>
-                <h4 class="font-serif text-lg font-semibold mb-1">Prime Locations</h4>
-                <p class="text-xs text-espresso/80">Rajahmundry, Bhimavaram & Kovvur, Andhra Pradesh</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Mobile Floating Glass Bar -->
-    <div class="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm">
-        <div class="glass-dark rounded-full p-3 px-6 flex items-center justify-between shadow-2xl text-white">
-            <a href="#villas" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-champagne/80 hover:text-white">
-                <i data-lucide="home" class="w-5 h-5 mb-0.5"></i>
-                Villas
-            </a>
-            <a href="tel:7780376043" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-champagne/80 hover:text-white">
-                <i data-lucide="phone" class="w-5 h-5 mb-0.5"></i>
-                Call
-            </a>
-            <a href="https://wa.me/917780376043?text=Hi,%20I%20am%20interested%20in%20booking%20a%20Srinivas%20Service%20Home." target="_blank" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-emerald-400 font-bold">
-                <i data-lucide="message-circle" class="w-5 h-5 mb-0.5"></i>
-                WhatsApp
-            </a>
-            <button onclick="openHostSecurityModal()" class="flex flex-col items-center text-[10px] uppercase tracking-wider text-amberGold hover:text-white">
-                <i data-lucide="shield-check" class="w-5 h-5 mb-0.5"></i>
-                Host
-            </button>
-        </div>
-    </div>
-
-    <!-- Residence Detail & Interactive Booking Modal -->
-    <div id="booking-modal" class="fixed inset-0 z-50 bg-espresso/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 hidden overflow-y-auto">
-        <div class="glass-card w-full max-w-4xl rounded-2xl p-5 sm:p-8 border border-amberGold/30 relative text-espresso my-auto max-h-[92vh] overflow-y-auto">
-            <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-espresso/60 hover:text-espresso bg-alabaster/80 p-2 rounded-full z-10">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-
-            <div id="modal-dynamic-content">
-                <!-- Dynamically Injected -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Host Portal Access Flow Modal -->
-    <div id="host-modal" class="fixed inset-0 z-50 bg-espresso/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="glass-card w-full max-w-3xl rounded-2xl p-6 sm:p-8 border border-amberGold/30 relative text-espresso max-h-[90vh] overflow-y-auto">
-            <button onclick="closeHostModal()" class="absolute top-5 right-5 text-espresso/60 hover:text-espresso">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-
-            <!-- STEP 1: Security PIN Verification -->
-            <div id="host-pin-step" class="text-center py-6 max-w-sm mx-auto">
-                <div class="w-12 h-12 bg-bronze/10 rounded-full flex items-center justify-center mx-auto mb-3 text-bronze">
-                    <i data-lucide="lock" class="w-6 h-6"></i>
-                </div>
-                <h3 class="font-serif text-2xl font-semibold mb-1">Host Verification Required</h3>
-                <p class="text-xs text-espresso/70 mb-6">Enter host security PIN to access management options.</p>
-
-                <div class="space-y-4">
-                    <input type="password" id="host-pin-input" placeholder="Enter PIN " maxlength="4" 
-                           class="w-full text-center tracking-[0.5em] text-lg font-bold bg-white border border-bronze/30 rounded-xl py-3 focus:outline-none focus:border-bronze">
-                    
-                    <button onclick="verifyHostPin()" class="w-full bg-espresso text-champagne py-3 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
-                        Authenticate Host Access
-                    </button>
-                    <p id="pin-error" class="text-xs text-red-600 hidden font-semibold">Invalid PIN. Please try again.</p>
-                </div>
-            </div>
-
-            <!-- STEP 2: Authenticated Host Panel -->
-            <div id="host-panel-step" class="hidden space-y-6">
-                <div class="flex items-center justify-between pb-4 border-b border-bronze/10">
-                    <div>
-                        <span class="text-emerald-700 text-[10px] uppercase font-bold tracking-widest block">Authenticated Session</span>
-                        <h3 class="font-serif text-2xl font-semibold text-espresso">Host Operations Dashboard</h3>
-                    </div>
-                    <button onclick="logoutHost()" class="text-xs text-red-700 underline font-medium">Exit Host Mode</button>
-                </div>
-
-                <!-- Villa Booked Dates Overview with Month/Year Filter -->
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h4 class="text-xs uppercase tracking-wider font-semibold text-espresso/80">Villa Schedules</h4>
-                        <div class="flex space-x-2">
-                            <select id="host-month-select" onchange="renderHostOverview()" class="bg-white border border-bronze/20 rounded-md text-xs font-semibold px-2 py-1">
-                                <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
-                                <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
-                                <option value="6" selected>Jul</option><option value="7">Aug</option><option value="8">Sep</option>
-                                <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
-                            </select>
-                            <select id="host-year-select" onchange="renderHostOverview()" class="bg-white border border-bronze/20 rounded-md text-xs font-semibold px-2 py-1">
-                                <option value="2026" selected>2026</option><option value="2027">2027</option>
-                            </select>
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold uppercase text-[#1A1815] border-b border-neutral-200 pb-2">Room Gallery</p>
+                    <div className="space-y-3">
+                      {activeSidebarProperty.slides.map((s, idx) => (
+                        <div key={idx} className="rounded-xl overflow-hidden border border-neutral-200 space-y-1">
+                          <img src={s.url} alt={s.title} className="w-full h-36 object-cover" />
+                          <p className="p-2 text-xs font-semibold text-center bg-[#FAF6F0] text-[#1A1815]">{s.title}</p>
                         </div>
+                      ))}
                     </div>
-                    <div id="host-villas-overview" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Injected JS -->
-                    </div>
-                </div>
+                  </div>
 
-                <!-- Lock Date Controls at Bottom -->
-                <div class="pt-4 border-t border-bronze/10">
-                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-3 text-espresso">Set / Lock Offline Override Date</h4>
-                    <form onsubmit="applyHostDateLock(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                        <div>
-                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Select Villa</label>
-                            <select id="lock-villa-id" class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
-                                <option value="1">Rajahmundry Riverside Estate</option>
-                                <option value="2">Bhimavaram Waterway Palace</option>
-                                <option value="3">Kovvur Sanctuary Home</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Target Month/Year</label>
-                            <div class="flex space-x-1">
-                                <select id="lock-month-select" class="w-1/2 bg-white border border-bronze/20 rounded-lg p-2 text-xs">
-                                    <option value="6" selected>Jul</option><option value="7">Aug</option><option value="8">Sep</option><option value="9">Oct</option>
-                                </select>
-                                <select id="lock-year-select" class="w-1/2 bg-white border border-bronze/20 rounded-lg p-2 text-xs">
-                                    <option value="2026" selected>2026</option><option value="2027">2027</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Day (1-31)</label>
-                            <input type="number" id="lock-day-input" min="1" max="31" placeholder="e.g. 21" required class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase tracking-wider font-bold mb-1 text-espresso/70">Action</label>
-                            <select id="lock-action-type" class="w-full bg-white border border-bronze/20 rounded-lg p-2 text-xs">
-                                <option value="locked">Lock Date</option>
-                                <option value="available">Unlock Date</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-4">
-                            <button type="submit" class="w-full bg-espresso text-champagne py-3 rounded-lg text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
-                                Update & Apply Host Calendar Lock
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Logic -->
-    <script>
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-        // Villa Collection Data
-        const villas = [
-            {
-                id: 1,
-                tag: 'rajahmundry',
-                title: 'Rajahmundry Riverside Estate',
-                location: 'Rajahmundry, Andhra Pradesh',
-                mapUrl: 'https://maps.google.com/maps?q=Rajahmundry,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
-                rates: { hourly: '₹1,500', nightly: '₹8,500', full24hr: '₹11,500' },
-                images: {
-                    hall: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80',
-                    bedroom: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1000&q=80',
-                    kitchen: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80'
-                },
-                amenities: ['Godavari River View Deck', 'Private Swimming Pool', 'Chef Kitchen', 'High-Speed Wi-Fi'],
-                // Key format: YYYY-M-D
-                dateStatus: { '2026-6-21': 'booked', '2026-6-22': 'booked', '2026-6-28': 'locked', '2026-7-15': 'booked' }
-            },
-            {
-                id: 2,
-                tag: 'bhimavaram',
-                title: 'Bhimavaram Waterway Palace',
-                location: 'Bhimavaram, Andhra Pradesh',
-                mapUrl: 'https://maps.google.com/maps?q=Bhimavaram,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
-                rates: { hourly: '₹1,800', nightly: '₹9,800', full24hr: '₹13,000' },
-                images: {
-                    hall: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
-                    bedroom: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1000&q=80',
-                    kitchen: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1000&q=80'
-                },
-                amenities: ['Aqua Courtyard', 'Open Skylight Lounge', 'Jacuzzi Suite', '24/7 Butler Service'],
-                dateStatus: { '2026-6-25': 'booked', '2026-6-26': 'locked', '2026-7-10': 'booked' }
-            },
-            {
-                id: 3,
-                tag: 'kovvur',
-                title: 'Kovvur Sanctuary Home',
-                location: 'Kovvur, Andhra Pradesh',
-                mapUrl: 'https://maps.google.com/maps?q=Kovvur,Andhra+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
-                rates: { hourly: '₹1,200', nightly: '₹6,800', full24hr: '₹9,500' },
-                images: {
-                    hall: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80',
-                    bedroom: 'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1000&q=80',
-                    kitchen: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1000&q=80'
-                },
-                amenities: ['Serene Garden Lawn', 'Private Gazebo', 'Modern Modular Kitchen', 'Power Backup'],
-                dateStatus: { '2026-6-21': 'locked', '2026-6-29': 'booked', '2026-7-18': 'booked' }
-            }
-        ];
-
-        let selectedVillaId = null;
-        let activeSelectedDate = null;
-        let activeSelectedRate = null;
-        let modalSelectedMonth = 6;
-        let modalSelectedYear = 2026;
-
-        // Helper to get total days in a given month/year
-        function getDaysInMonth(month, year) {
-            return new Date(year, month + 1, 0).getDate();
-        }
-
-        // Render Villa Cards
-        function renderVillas(filter = 'all') {
-            const container = document.getElementById('villas-container');
-            container.innerHTML = '';
-
-            const filtered = filter === 'all' ? villas : villas.filter(v => v.tag === filter);
-
-            filtered.forEach(v => {
-                const card = document.createElement('div');
-                card.className = 'glass-card rounded-2xl overflow-hidden border border-bronze/15 flex flex-col justify-between hover:shadow-xl transition-all duration-300';
-                card.innerHTML = `
-                    <div>
-                        <div class="relative h-52 overflow-hidden group">
-                            <img src="${v.images.hall}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${v.title}">
-                            <div class="absolute top-3 right-3 bg-espresso/90 text-amberGold text-xs px-3 py-1 rounded-full font-semibold">
-                                Starts at ${v.rates.hourly} <span class="text-[9px] text-white/70">/ hr</span>
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <span class="text-bronze text-[10px] uppercase tracking-widest font-semibold">${v.location}</span>
-                            <h3 class="font-serif text-xl font-normal text-espresso mt-1 mb-2">${v.title}</h3>
-                            
-                            <div class="grid grid-cols-3 gap-1 bg-champagne/40 p-2 rounded-xl mb-4 text-center text-xs">
-                                <div><span class="block text-[8px] text-espresso/60 uppercase">1 Hour</span><span class="font-bold">${v.rates.hourly}</span></div>
-                                <div class="border-x border-bronze/10"><span class="block text-[8px] text-espresso/60 uppercase">Nightly</span><span class="font-bold">${v.rates.nightly}</span></div>
-                                <div><span class="block text-[8px] text-espresso/60 uppercase">24 Hours</span><span class="font-bold">${v.rates.full24hr}</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-5 pb-5">
-                        <button onclick="openBookingModal(${v.id})" class="w-full bg-espresso text-champagne py-3 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all">
-                            View & Reserve Villa
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Render Cute Mini Calendars for Main View
-        function changeMainCalendarDate() {
-            renderMasterCalendars();
-        }
-
-        function renderMasterCalendars() {
-            const container = document.getElementById('master-calendar-grid');
-            container.innerHTML = '';
-
-            const selectedMonth = parseInt(document.getElementById('main-month-select').value);
-            const selectedYear = parseInt(document.getElementById('main-year-select').value);
-            const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
-
-            villas.forEach(v => {
-                let daysHtml = '';
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const key = `${selectedYear}-${selectedMonth}-${i}`;
-                    const status = v.dateStatus[key] || 'available';
-                    let bg = 'bg-emerald-100 text-emerald-800';
-                    if (status === 'booked') bg = 'bg-amberGold text-white';
-                    if (status === 'locked') bg = 'bg-espresso text-amberGold font-bold';
-
-                    daysHtml += `<div class="cute-mini-day ${bg}">${i}</div>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'bg-white p-4 rounded-2xl border border-bronze/15 shadow-sm hover:border-bronze/40 transition-all';
-                card.innerHTML = `
-                    <div class="flex items-center justify-between mb-2 pb-2 border-b border-bronze/10">
-                        <div>
-                            <h4 class="font-serif font-semibold text-sm text-espresso leading-tight">${v.title}</h4>
-                            <span class="text-[9px] text-espresso/60 uppercase tracking-wider">${v.location}</span>
-                        </div>
-                        <button onclick="openBookingModal(${v.id})" class="text-[10px] text-bronze font-bold hover:underline">Select</button>
-                    </div>
-                    <div class="grid grid-cols-7 gap-0.5 text-center text-[8px] font-bold text-espresso/40 mb-1">
-                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                    </div>
-                    <div class="grid grid-cols-7 gap-y-1">
-                        ${daysHtml}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Open Residence & Interactive Selection Modal
-        function openBookingModal(id) {
-            selectedVillaId = id;
-            activeSelectedDate = null;
-            activeSelectedRate = null;
-
-            const v = villas.find(item => item.id === id);
-            if (!v) return;
-
-            renderModalContent(v);
-            document.getElementById('booking-modal').classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function updateModalCalendar() {
-            modalSelectedMonth = parseInt(document.getElementById('modal-month-select').value);
-            modalSelectedYear = parseInt(document.getElementById('modal-year-select').value);
-            const v = villas.find(item => item.id === selectedVillaId);
-            if (v) renderModalContent(v);
-        }
-
-        function renderModalContent(v) {
-            const content = document.getElementById('modal-dynamic-content');
-            const daysInMonth = getDaysInMonth(modalSelectedMonth, modalSelectedYear);
-
-            let daysHtml = '';
-            for (let i = 1; i <= daysInMonth; i++) {
-                const key = `${modalSelectedYear}-${modalSelectedMonth}-${i}`;
-                const status = v.dateStatus[key] || 'available';
-                let stateClass = 'bg-emerald-100 text-emerald-900 hover:bg-emerald-300 cursor-pointer';
-                let disabledAttr = '';
-
-                if (status === 'booked') {
-                    stateClass = 'bg-amberGold text-white opacity-60 cursor-not-allowed';
-                    disabledAttr = 'disabled';
-                } else if (status === 'locked') {
-                    stateClass = 'bg-espresso text-amberGold opacity-60 cursor-not-allowed';
-                    disabledAttr = 'disabled';
-                }
-
-                const isSelected = (activeSelectedDate === `${modalSelectedYear}-${modalSelectedMonth}-${i}`);
-                if (isSelected) {
-                    stateClass += ' selected-date';
-                }
-
-                daysHtml += `
-                    <button ${disabledAttr} onclick="selectBookingDate(${i}, this)" 
-                            class="calendar-day-btn ${stateClass} p-1">
-                        ${i}
-                    </button>
-                `;
-            }
-
-            content.innerHTML = `
-                <div class="mb-4">
-                    <span class="text-bronze text-xs uppercase tracking-widest font-semibold">${v.location}</span>
-                    <h2 class="font-serif text-2xl sm:text-3xl font-normal text-espresso mt-1">${v.title}</h2>
-                </div>
-
-                <!-- Interior Gallery Showcase -->
-                <div class="mb-6">
-                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Interior Spaces</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div class="space-y-1">
-                            <img src="${v.images.hall}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Hall">
-                            <span class="text-[10px] text-center block font-medium">Grand Hall</span>
-                        </div>
-                        <div class="space-y-1">
-                            <img src="${v.images.bedroom}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Bedroom">
-                            <span class="text-[10px] text-center block font-medium">Bedroom Suite</span>
-                        </div>
-                        <div class="space-y-1">
-                            <img src="${v.images.kitchen}" class="w-full h-32 object-cover rounded-xl border border-bronze/10" alt="Kitchen">
-                            <span class="text-[10px] text-center block font-medium">Chef's Kitchen</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Rate Package Selector -->
-                <div class="mb-6">
-                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Step 1: Select Stay Package</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div id="rate-hourly" onclick="selectBookingRate('1 Hour (${v.rates.hourly})', 'rate-hourly')" 
-                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('1 Hour') ? 'selected-rate' : ''}">
-                            <span class="text-[10px] uppercase text-bronze font-bold block">Hourly Stay</span>
-                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.hourly}</span>
-                            <span class="text-[9px] text-espresso/60">1 Hour Access</span>
-                        </div>
-
-                        <div id="rate-nightly" onclick="selectBookingRate('1 Night (${v.rates.nightly})', 'rate-nightly')" 
-                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('1 Night') ? 'selected-rate' : ''}">
-                            <span class="text-[10px] uppercase text-bronze font-bold block">Night Stay</span>
-                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.nightly}</span>
-                            <span class="text-[9px] text-espresso/60">Overnight Package</span>
-                        </div>
-
-                        <div id="rate-24hr" onclick="selectBookingRate('24 Hours (${v.rates.full24hr})', 'rate-24hr')" 
-                             class="rate-card-option p-3 rounded-xl border border-bronze/20 bg-alabaster text-center cursor-pointer hover:border-bronze transition-all ${activeSelectedRate?.includes('24 Hours') ? 'selected-rate' : ''}">
-                            <span class="text-[10px] uppercase text-bronze font-bold block">24 Hours Stay</span>
-                            <span class="text-lg font-serif font-bold text-espresso block">${v.rates.full24hr}</span>
-                            <span class="text-[9px] text-espresso/60">Full Day Retreat</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Date Selector with Month & Year -->
-                <div class="mb-6 bg-white p-4 rounded-xl border border-bronze/15">
-                    <div class="flex flex-wrap items-center justify-between mb-3 gap-2">
-                        <h4 class="text-xs uppercase tracking-wider font-semibold text-espresso">Step 2: Choose Date</h4>
-                        
-                        <div class="flex items-center space-x-2">
-                            <select id="modal-month-select" onchange="updateModalCalendar()" class="bg-alabaster border border-bronze/20 text-xs font-semibold rounded-lg px-2 py-1 text-espresso">
-                                ${monthNames.map((m, idx) => `<option value="${idx}" ${idx === modalSelectedMonth ? 'selected' : ''}>${m}</option>`).join('')}
-                            </select>
-                            <select id="modal-year-select" onchange="updateModalCalendar()" class="bg-alabaster border border-bronze/20 text-xs font-semibold rounded-lg px-2 py-1 text-espresso">
-                                <option value="2026" ${modalSelectedYear === 2026 ? 'selected' : ''}>2026</option>
-                                <option value="2027" ${modalSelectedYear === 2027 ? 'selected' : ''}>2027</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-espresso/40 mb-1">
-                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                    </div>
-                    <div class="grid grid-cols-7 gap-1">
-                        ${daysHtml}
-                    </div>
-                    <span id="selected-date-indicator" class="text-xs font-bold text-bronze block mt-2 text-center">
-                        ${activeSelectedDate ? `Selected Date: ${activeSelectedDate}` : 'No Date Selected'}
-                    </span>
-                </div>
-
-                <!-- Location Map Embed -->
-                <div class="mb-6">
-                    <h4 class="text-xs uppercase tracking-wider font-semibold mb-2 text-espresso/80">Google Map Location</h4>
-                    <div class="w-full h-36 rounded-xl overflow-hidden border border-bronze/20">
-                        <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="${v.mapUrl}"></iframe>
-                    </div>
-                </div>
-
-                <!-- Action & WhatsApp Direct Link -->
-                <div class="space-y-3">
-                    <button id="confirm-booking-btn" onclick="executeBookingAction()" 
-                            class="w-full bg-espresso text-champagne py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-bronze transition-all duration-300 shadow-md">
-                        Confirm Selection
-                    </button>
-                    
-                    <a id="whatsapp-direct-link" href="#" target="_blank" 
-                       class="hidden w-full bg-emerald-600 text-white py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 shadow-lg btn-success-anim">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                        <span>Send Pre-Filled WhatsApp Booking Message</span>
+                  <div className="pt-4 border-t border-neutral-200">
+                    <a 
+                      href="#booking"
+                      onClick={() => {
+                        setSelectedProperty(activeSidebarProperty.id);
+                        setActiveSidebarProperty(null);
+                      }}
+                      className="block w-full text-center py-3.5 rounded-full bg-[#C5A059] text-white font-bold text-xs uppercase hover:bg-amber-600 transition"
+                    >
+                      Book This Residence
                     </a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* RESERVATION ENGINE */}
+          <section id="booking" className="py-24 px-6 bg-[#FAF6F0]/90 border-y border-[#C5A059]/20">
+            <div className="max-w-4xl mx-auto space-y-12">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center space-y-3"
+              >
+                <h2 className="text-xs uppercase tracking-[0.3em] text-[#C5A059] font-bold">Reservation Engine</h2>
+                <p className="text-3xl md:text-5xl font-serif font-bold text-[#1A1815]">Select Date & Duration</p>
+              </motion.div>
+
+              <motion.form 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                onSubmit={handleBookingSubmit} 
+                className="glass-card border border-[#C5A059]/30 rounded-3xl p-6 md:p-10 space-y-8 shadow-xl"
+              >
+                {/* Location */}
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold flex items-center space-x-2">
+                    <i data-lucide="map-pin" className="w-4 h-4"></i>
+                    <span>1. Location</span>
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {PROPERTIES.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setSelectedProperty(p.id)}
+                        className={`p-4 rounded-2xl border text-left transition-all duration-300 ${
+                          selectedProperty === p.id 
+                            ? 'border-[#C5A059] bg-[#FAF6F0] text-[#1A1815] shadow-md font-bold scale-[1.02]' 
+                            : 'border-neutral-200 bg-white text-neutral-500 hover:border-[#C5A059]/50'
+                        }`}
+                      >
+                        <p className="font-serif text-lg">{p.name}</p>
+                        <p className="text-xs text-neutral-400 mt-1">{p.city}</p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-            `;
-            lucide.createIcons();
-        }
 
-        function closeBookingModal() {
-            document.getElementById('booking-modal').classList.add('hidden');
-        }
+                {/* Duration */}
+                <div className="space-y-3">
+                  <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold flex items-center space-x-2">
+                    <i data-lucide="clock" className="w-4 h-4"></i>
+                    <span>2. Duration</span>
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setStayDuration('1h')}
+                      className={`p-5 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
+                        stayDuration === '1h' ? 'border-[#C5A059] bg-[#FAF6F0] font-bold scale-[1.01]' : 'border-neutral-200 bg-white text-neutral-500 hover:border-[#C5A059]/50'
+                      }`}
+                    >
+                      <div>
+                        <p className="font-serif text-base text-[#1A1815]">Short Stay (1 Hour)</p>
+                        <p className="text-xs text-neutral-400">Quick relaxation</p>
+                      </div>
+                      <span className="text-xl font-bold text-[#C5A059]">₹2,500</span>
+                    </button>
 
-        // Selection Handlers
-        function selectBookingRate(rateLabel, elementId) {
-            activeSelectedRate = rateLabel;
-            document.querySelectorAll('.rate-card-option').forEach(el => el.classList.remove('selected-rate'));
-            document.getElementById(elementId).classList.add('selected-rate');
-        }
+                    <button
+                      type="button"
+                      onClick={() => setStayDuration('24h')}
+                      className={`p-5 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
+                        stayDuration === '24h' ? 'border-[#C5A059] bg-[#FAF6F0] font-bold scale-[1.01]' : 'border-neutral-200 bg-white text-neutral-500 hover:border-[#C5A059]/50'
+                      }`}
+                    >
+                      <div>
+                        <p className="font-serif text-base text-[#1A1815]">Full Stay (24 Hours / 1 Night)</p>
+                        <p className="text-xs text-neutral-400">Complete private luxury stay</p>
+                      </div>
+                      <span className="text-xl font-bold text-[#C5A059]">₹5,000</span>
+                    </button>
+                  </div>
+                </div>
 
-        function selectBookingDate(day, element) {
-            activeSelectedDate = `${modalSelectedYear}-${monthNames[modalSelectedMonth]}-${day}`;
-            document.querySelectorAll('.calendar-day-btn').forEach(el => el.classList.remove('selected-date'));
-            element.classList.add('selected-date');
-            document.getElementById('selected-date-indicator').innerText = `Selected Date: ${activeSelectedDate}`;
-        }
+                {/* Check-In & Auto Exit Schedule */}
+                <div className="space-y-4">
+                  <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold flex items-center space-x-2">
+                    <i data-lucide="calendar" className="w-4 h-4"></i>
+                    <span>3. Check-In & Exit Schedule</span>
+                  </label>
 
-        function executeBookingAction() {
-            if (!activeSelectedRate) {
-                alert('Please select a Stay Package first.');
-                return;
-            }
-            if (!activeSelectedDate) {
-                alert('Please select an available date on the calendar.');
-                return;
-            }
-
-            const v = villas.find(item => item.id === selectedVillaId);
-            const btn = document.getElementById('confirm-booking-btn');
-            const waBtn = document.getElementById('whatsapp-direct-link');
-
-            btn.className = 'w-full py-3.5 rounded-xl text-xs uppercase tracking-widest font-semibold transition-all btn-success-anim';
-            btn.innerText = '✓ Date & Rate Selected Successfully!';
-
-            const message = `Hello Srinivas Service Homes,%0A%0AI would like to confirm a booking for:%0A• *Villa:* ${v.title} (${v.location})%0A• *Package:* ${activeSelectedRate}%0A• *Booking Date:* ${activeSelectedDate}%0A%0APlease assist with confirmation.`;
-            const waUrl = `https://wa.me/917780376043?text=${message}`;
-
-            waBtn.href = waUrl;
-            waBtn.classList.remove('hidden');
-        }
-
-        // Host Security Operations
-        function openHostSecurityModal() {
-            document.getElementById('host-modal').classList.remove('hidden');
-        }
-
-        function closeHostModal() {
-            document.getElementById('host-modal').classList.add('hidden');
-        }
-
-        function verifyHostPin() {
-            const pin = document.getElementById('host-pin-input').value;
-            const err = document.getElementById('pin-error');
-
-            if (pin === '1234') {
-                err.classList.add('hidden');
-                document.getElementById('host-pin-step').classList.add('hidden');
-                document.getElementById('host-panel-step').classList.remove('hidden');
-                renderHostOverview();
-            } else {
-                err.classList.remove('hidden');
-            }
-        }
-
-        function logoutHost() {
-            document.getElementById('host-pin-input').value = '';
-            document.getElementById('host-pin-step').classList.remove('hidden');
-            document.getElementById('host-panel-step').classList.add('hidden');
-            closeHostModal();
-        }
-
-        function renderHostOverview() {
-            const container = document.getElementById('host-villas-overview');
-            container.innerHTML = '';
-
-            const hostMonth = parseInt(document.getElementById('host-month-select').value);
-            const hostYear = parseInt(document.getElementById('host-year-select').value);
-            const daysInMonth = getDaysInMonth(hostMonth, hostYear);
-
-            villas.forEach(v => {
-                let daysHtml = '';
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const key = `${hostYear}-${hostMonth}-${i}`;
-                    const status = v.dateStatus[key] || 'available';
-                    let bg = 'bg-emerald-100 text-emerald-800';
-                    if (status === 'booked') bg = 'bg-amberGold text-white';
-                    if (status === 'locked') bg = 'bg-espresso text-amberGold font-bold';
-
-                    daysHtml += `<div class="cute-mini-day ${bg}">${i}</div>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'bg-white p-3 rounded-xl border border-bronze/20';
-                card.innerHTML = `
-                    <span class="font-serif font-semibold text-xs text-espresso block mb-1">${v.title}</span>
-                    <div class="grid grid-cols-7 gap-0.5 text-center text-[8px] font-bold text-espresso/40 mb-1">
-                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/80 p-5 rounded-2xl border border-neutral-200">
+                    <div className="space-y-3">
+                      <p className="text-xs font-bold uppercase text-[#C5A059]">Check-In</p>
+                      <div>
+                        <label className="text-[10px] uppercase text-neutral-500">Check-In Date</label>
+                        <input 
+                          type="date" 
+                          required 
+                          value={bookingDate}
+                          onChange={(e) => setBookingDate(e.target.value)}
+                          className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] uppercase text-neutral-500">Check-In Time</label>
+                        <input 
+                          type="time" 
+                          required 
+                          value={bookingTime}
+                          onChange={(e) => setBookingTime(e.target.value)}
+                          className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                        />
+                      </div>
                     </div>
-                    <div class="grid grid-cols-7 gap-y-1">${daysHtml}</div>
-                `;
-                container.appendChild(card);
-            });
-        }
 
-        function applyHostDateLock(e) {
-            e.preventDefault();
-            const villaId = parseInt(document.getElementById('lock-villa-id').value);
-            const month = parseInt(document.getElementById('lock-month-select').value);
-            const year = parseInt(document.getElementById('lock-year-select').value);
-            const day = parseInt(document.getElementById('lock-day-input').value);
-            const action = document.getElementById('lock-action-type').value;
+                    <div className="space-y-3">
+                      <p className="text-xs font-bold uppercase text-[#1A1815]">Expected Departure / Exit</p>
+                      <div>
+                        <label className="text-[10px] uppercase text-neutral-500">Exit Date</label>
+                        <input 
+                          type="date" 
+                          required 
+                          value={exitDate}
+                          onChange={(e) => setExitDate(e.target.value)}
+                          className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] uppercase text-neutral-500">Exit Time</label>
+                        <input 
+                          type="time" 
+                          required 
+                          value={exitTime}
+                          onChange={(e) => setExitTime(e.target.value)}
+                          className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            const target = villas.find(v => v.id === villaId);
-            const daysInMonth = getDaysInMonth(month, year);
+                {/* Guest Details */}
+                <div className="space-y-4">
+                  <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold">4. Guest Information</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input 
+                      type="text" 
+                      placeholder="Full Name" 
+                      required 
+                      value={guestDetails.name}
+                      onChange={(e) => setGuestDetails({...guestDetails, name: e.target.value})}
+                      className="bg-white border border-neutral-300 rounded-xl px-4 py-3 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                    />
+                    <input 
+                      type="tel" 
+                      placeholder="Phone Number" 
+                      required 
+                      value={guestDetails.phone}
+                      onChange={(e) => setGuestDetails({...guestDetails, phone: e.target.value})}
+                      className="bg-white border border-neutral-300 rounded-xl px-4 py-3 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                    />
+                    <input 
+                      type="email" 
+                      placeholder="Email Address" 
+                      required 
+                      value={guestDetails.email}
+                      onChange={(e) => setGuestDetails({...guestDetails, email: e.target.value})}
+                      className="bg-white border border-neutral-300 rounded-xl px-4 py-3 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
+                    />
+                  </div>
+                </div>
 
-            if (target && day >= 1 && day <= daysInMonth) {
-                const key = `${year}-${month}-${day}`;
-                if (action === 'available') {
-                    delete target.dateStatus[key];
-                } else {
-                    target.dateStatus[key] = 'locked';
-                }
+                <div className="pt-6 border-t border-neutral-200 flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div>
+                    <span className="text-xs uppercase text-neutral-400 block">Total Amount</span>
+                    <span className="text-3xl font-extrabold text-[#C5A059]">₹{price.toLocaleString('en-IN')}</span>
+                  </div>
+                  <button type="submit" className="w-full md:w-auto px-10 py-4 rounded-full bg-[#C5A059] text-white font-bold tracking-wider text-xs uppercase hover:bg-amber-600 transition shadow-lg hover:shadow-amber-500/20">
+                    Proceed to Payment
+                  </button>
+                </div>
 
-                renderVillas();
-                renderMasterCalendars();
-                renderHostOverview();
-                alert(`Host Calendar Updated: ${monthNames[month]} ${day}, ${year} for ${target.title} set to ${action}.`);
-            }
-        }
+              </motion.form>
+            </div>
+          </section>
 
-        function filterVillas(tag) {
-            document.querySelectorAll('.loc-btn').forEach(btn => {
-                btn.classList.remove('bg-espresso', 'text-alabaster');
-                btn.classList.add('hover:bg-bronze/10');
-            });
-            event.target.classList.add('bg-espresso', 'text-alabaster');
-            renderVillas(tag);
-        }
+          {/* CHECKOUT MODAL */}
+          <AnimatePresence>
+            {isCheckoutOpen && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-white border border-[#C5A059]/40 max-w-lg w-full rounded-3xl p-6 space-y-6 relative shadow-2xl"
+                >
+                  <button onClick={() => setIsCheckoutOpen(false)} className="absolute top-4 right-4 text-neutral-400 hover:text-black">✕</button>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            renderVillas();
-            renderMasterCalendars();
-        });
-    </script>
+                  <div className="text-center space-y-2">
+                    <h3 className="text-2xl font-serif font-bold text-[#1A1815]">Pay via Paytm UPI</h3>
+                    <p className="text-xs text-neutral-500">Scan QR Code or Click Paytm link to authorize booking.</p>
+                  </div>
+
+                  <div className="bg-[#FAF6F0] p-4 rounded-2xl border border-neutral-200 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-500">Residence:</span>
+                      <span className="text-[#1A1815] font-bold">{PROPERTIES.find(p => p.id === selectedProperty)?.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-500">Check-In:</span>
+                      <span className="text-[#1A1815]">{bookingDate} at {bookingTime}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-500">Expected Departure:</span>
+                      <span className="text-[#C5A059] font-bold">{exitDate} at {exitTime}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-neutral-200 pt-2 font-bold text-base">
+                      <span>Total Amount:</span>
+                      <span className="text-[#C5A059]">₹{price.toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+
+                  <div className="text-center space-y-4">
+                    <div className="bg-white p-3 inline-block rounded-2xl border border-neutral-200 shadow-md">
+                      <img 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=7780376043@paytm&pn=SrinivasServiceHome&am=${price}`}
+                        alt="Paytm QR" 
+                        className="w-32 h-32 mx-auto"
+                      />
+                    </div>
+                    <p className="text-xs text-neutral-500">Paytm Contact: <span className="text-[#C5A059] font-bold">{DISPLAY_PHONE}</span></p>
+
+                    <div className="space-y-3">
+                      <a href={`upi://pay?pa=7780376043@paytm&pn=SrinivasServiceHome&am=${price}`} className="block w-full py-3.5 rounded-full bg-[#C5A059] text-white font-bold hover:bg-amber-600 shadow-md">
+                        Pay via Paytm App
+                      </a>
+                      <button onClick={finalizeBooking} className="w-full py-3.5 rounded-full border border-[#C5A059] text-[#1A1815] font-bold hover:bg-[#FAF6F0]">
+                        Confirm & Send Details to WhatsApp
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* HOST LOGIN MODAL */}
+          <AnimatePresence>
+            {isHostLoginOpen && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-white border border-[#C5A059]/40 max-w-md w-full rounded-3xl p-6 space-y-6 relative shadow-2xl"
+                >
+                  <button onClick={() => setIsHostLoginOpen(false)} className="absolute top-4 right-4 text-neutral-400 hover:text-black">✕</button>
+                  
+                  <div className="text-center space-y-2">
+                    <h3 className="text-2xl font-serif font-bold text-[#1A1815]">Host Access Portal</h3>
+                    <p className="text-xs text-neutral-500">Enter Security PIN to open management panel</p>
+                  </div>
+
+                  <form onSubmit={handleHostAuth} className="space-y-4">
+                    <input 
+                      type="password"
+                      maxLength={4}
+                      placeholder="PIN (Enter Pin)"
+                      value={hostPinInput}
+                      onChange={(e) => setHostPinInput(e.target.value)}
+                      className="w-full bg-[#FAF6F0] border border-neutral-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-neutral-800 focus:outline-none focus:border-[#C5A059]"
+                    />
+                    {pinError && <p className="text-xs text-red-500 text-center">Invalid Security PIN</p>}
+                    <button type="submit" className="w-full py-3.5 rounded-full bg-[#C5A059] text-white font-bold">
+                      Login
+                    </button>
+                  </form>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* HOST DASHBOARD */}
+          {isHostAuthenticated && (
+            <motion.section 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="py-12 px-6 bg-white border-b border-[#C5A059]/40"
+            >
+              <div className="max-w-6xl mx-auto space-y-6">
+                <div className="flex justify-between items-center border-b border-neutral-200 pb-4">
+                  <div>
+                    <h2 className="text-2xl font-serif font-bold text-[#1A1815]">Host Departure & Exit Tracker</h2>
+                    <p className="text-xs text-neutral-500">Track active guest reservations and departure times</p>
+                  </div>
+                  <button onClick={() => setIsHostAuthenticated(false)} className="text-xs border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-50">
+                    Logout
+                  </button>
+                </div>
+
+                {bookings.length === 0 ? (
+                  <p className="text-center py-6 text-neutral-400 text-sm">No reservations stored yet.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs text-neutral-700">
+                      <thead className="uppercase bg-[#FAF6F0] text-[#C5A059]">
+                        <tr>
+                          <th className="p-3">ID</th>
+                          <th className="p-3">Guest Details</th>
+                          <th className="p-3">Residence</th>
+                          <th className="p-3">Check-In</th>
+                          <th className="p-3">Expected Exit</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-200 bg-white">
+                        {bookings.map((b) => (
+                          <tr key={b.id}>
+                            <td className="p-3 text-[#C5A059] font-mono font-bold">{b.id}</td>
+                            <td className="p-3">
+                              <p className="font-bold text-[#1A1815]">{b.guestName}</p>
+                              <p className="text-neutral-500">{b.guestPhone}</p>
+                            </td>
+                            <td className="p-3">{b.property}</td>
+                            <td className="p-3">{b.checkInDate || b.date} ({b.checkInTime || b.time})</td>
+                            <td className="p-3 text-[#C5A059] font-bold">{b.checkOutDate ? `${b.checkOutDate} (${b.checkOutTime})` : 'N/A'}</td>
+                            <td className="p-3">
+                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                                b.status === 'Completed' 
+                                  ? 'bg-neutral-100 text-neutral-500' 
+                                  : 'bg-green-100 text-green-700 border border-green-300'
+                              }`}>
+                                {b.status || 'Active'}
+                              </span>
+                            </td>
+                            <td className="p-3">
+                              {b.status !== 'Completed' && (
+                                <button 
+                                  onClick={() => markGuestCheckedOut(b.id)}
+                                  className="text-[10px] border border-[#C5A059] text-[#C5A059] px-3 py-1 rounded-lg hover:bg-[#C5A059] hover:text-white transition"
+                                >
+                                  Mark Checked Out
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </motion.section>
+          )}
+
+          {/* FOOTER */}
+          <footer id="contact" className="py-12 px-6 bg-[#1A1815] text-white text-center space-y-4">
+            <p className="text-[#C5A059] font-serif text-xl font-bold">Srinivas Service Home</p>
+            <p className="text-xs text-neutral-400">Direct Host Contact & Paytm: {DISPLAY_PHONE}</p>
+            <p className="text-xs text-neutral-500">© {new Date().getFullYear()} Srinivas Service Home. All Rights Reserved.</p>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
 </body>
 </html>

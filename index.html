@@ -340,77 +340,80 @@
     const DISPLAY_PHONE = '+91 77803 76043';
     const SECRET_PIN = '7780';
 
-    // Cute Mini Calendar Component showing current month days with availability indicators
-    function MiniCuteCalendar({ roomId, hostLocks, bookings, selectedDate, onSelectDate }) {
-      const [currentDate, setCurrentDate] = useState(new Date());
+    function isSlotBooked(roomId, dateStr, hourInt, bookings, hostLocks) {
+      if (!dateStr || hourInt === undefined) return false;
+      
+      const isLocked = hostLocks.some(l => {
+        if (l.roomId !== roomId) return false;
+        if (l.startDate <= dateStr && dateStr <= l.endDate) {
+          if (l.startDate === l.endDate && l.startDate === dateStr) {
+            return hourInt >= l.startHour && hourInt <= l.endHour;
+          }
+          if (dateStr === l.startDate) return hourInt >= l.startHour;
+          if (dateStr === l.endDate) return hourInt <= l.endHour;
+          return true;
+        }
+        return false;
+      });
+      if (isLocked) return true;
 
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
+      return bookings.some(b => {
+        if (b.roomId !== roomId || b.status === 'Completed') return false;
+        const startD = b.startDate;
+        const endD = b.endDate;
+        const startH = parseInt(b.startHour || 0, 10);
+        const endH = parseInt(b.endHour || 24, 10);
 
-      const firstDayOfMonth = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+        if (dateStr >= startD && dateStr <= endD) {
+          if (startD === endD && startD === dateStr) {
+            return hourInt >= startH && hourInt <= endH;
+          }
+          if (dateStr === startD) return hourInt >= startH;
+          if (dateStr === endD) return hourInt <= endH;
+          return true;
+        }
+        return false;
+      });
+    }
 
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-      const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
-      const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
-
-      // Build days array
-      const days = [];
-      for (let i = 0; i < firstDayOfMonth; i++) {
-        days.push(null);
-      }
-      for (let d = 1; d <= daysInMonth; d++) {
-        const mm = String(month + 1).padStart(2, '0');
-        const dd = String(d).padStart(2, '0');
-        const dateStr = `${year}-${mm}-${dd}`;
-        days.push({ dayNum: d, dateStr });
-      }
+    function RangeAvailabilityCalendar({ roomId, bookings, hostLocks, startDate, endDate }) {
+      const [viewDate, setViewDate] = useState(startDate || new Date().toISOString().split('T')[0]);
+      const hoursList = Array.from({ length: 24 }, (_, i) => i);
 
       return (
-        <div className="bg-[#FAF6F0] p-4 rounded-2xl border border-[#C5A059]/30 shadow-inner max-w-sm mx-auto">
-          <div className="flex justify-between items-center mb-3">
-            <button type="button" onClick={prevMonth} className="p-1 rounded-full hover:bg-neutral-200 text-xs font-bold">&larr;</button>
-            <span className="font-serif font-bold text-xs uppercase text-[#1A1815]">{monthNames[month]} {year}</span>
-            <button type="button" onClick={nextMonth} className="p-1 rounded-full hover:bg-neutral-200 text-xs font-bold">&rarr;</button>
+        <div className="bg-[#FAF6F0] p-4 rounded-2xl border border-[#C5A059]/30 shadow-inner space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span className="font-serif font-bold text-xs uppercase text-[#1A1815]">Inspect Date & Time Slot Availability:</span>
+            <input 
+              type="date"
+              value={viewDate}
+              onChange={(e) => setViewDate(e.target.value)}
+              className="bg-white border border-neutral-300 rounded-lg px-2 py-1 text-xs text-neutral-800"
+            />
           </div>
 
-          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-neutral-400 mb-2">
-            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-          </div>
+          <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-48 overflow-y-auto p-1">
+            {hoursList.map((hour) => {
+              const booked = isSlotBooked(roomId, viewDate, hour, bookings, hostLocks);
+              const formattedHour = String(hour).padStart(2, '0') + ":00";
 
-          <div className="grid grid-cols-7 gap-1 text-center text-xs">
-            {days.map((item, index) => {
-              if (!item) return <div key={index}></div>;
-
-              const isLocked = hostLocks.some(l => l.roomId === roomId && l.date === item.dateStr);
-              const isBooked = bookings.some(b => b.roomId === roomId && b.status !== 'Completed' && (b.checkInDate === item.dateStr || (b.checkInDate <= item.dateStr && b.checkOutDate >= item.dateStr)));
-              const isSelected = selectedDate === item.dateStr;
-
-              let statusBg = 'bg-white text-neutral-700 hover:border-[#C5A059]';
-              if (isLocked || isBooked) {
-                statusBg = 'bg-red-100 text-red-700 border border-red-300 font-bold';
-              } else {
-                statusBg = 'bg-green-50 text-green-700 border border-green-200 font-bold';
-              }
-
-              if (isSelected) {
-                statusBg = 'bg-[#C5A059] text-white font-bold ring-2 ring-[#C5A059]';
+              let btnStyle = "bg-green-50 text-green-700 border-green-200";
+              if (booked) {
+                btnStyle = "bg-red-100 text-red-700 border-red-300 font-bold";
               }
 
               return (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => onSelectDate(item.dateStr)}
-                  className={`p-1.5 rounded-lg text-[11px] transition flex flex-col items-center justify-center ${statusBg}`}
+                <div
+                  key={hour}
+                  className={`p-1.5 rounded-lg border text-center text-[10px] transition flex flex-col items-center justify-center ${btnStyle}`}
                 >
-                  <span>{item.dayNum}</span>
-                  <span className="text-[8px] opacity-75">{isLocked || isBooked ? 'Booked' : 'Free'}</span>
-                </button>
+                  <span className="font-bold">{formattedHour}</span>
+                  <span className="text-[8px] opacity-90">{booked ? 'LOCKED' : 'Free'}</span>
+                </div>
               );
             })}
           </div>
+          <p className="text-[10px] text-neutral-500 text-center">Red = Locked/Booked at specific time zones. Green = Available.</p>
         </div>
       );
     }
@@ -526,10 +529,11 @@
       const [selectedRoomId, setSelectedRoomId] = useState(PROPERTIES[0].rooms[0].roomId);
       const [stayDuration, setStayDuration] = useState('24h');
       
-      const [bookingDate, setBookingDate] = useState('');
-      const [bookingTime, setBookingTime] = useState('12:00');
-      const [exitDate, setExitDate] = useState('');
-      const [exitTime, setExitTime] = useState('12:00');
+      const todayStr = new Date().toISOString().split('T')[0];
+      const [startDate, setStartDate] = useState(todayStr);
+      const [startTime, setStartTime] = useState('13:00');
+      const [endDate, setEndDate] = useState(todayStr);
+      const [endTime, setEndTime] = useState('13:00');
 
       const [guestDetails, setGuestDetails] = useState({ name: '', phone: '', email: '' });
       
@@ -544,8 +548,10 @@
       // Host Manual Booking state
       const [hostSelectedHouse, setHostSelectedHouse] = useState(PROPERTIES[0].id);
       const [hostSelectedRoomId, setHostSelectedRoomId] = useState(PROPERTIES[0].rooms[0].roomId);
-      const [hostLockDate, setHostLockDate] = useState('');
-      const [hostLockTime, setHostLockTime] = useState('12:00');
+      const [hostStartDate, setHostStartDate] = useState(todayStr);
+      const [hostStartTime, setHostStartTime] = useState('13:00');
+      const [hostEndDate, setHostEndDate] = useState(todayStr);
+      const [hostEndTime, setHostEndTime] = useState('13:00');
       const [hostOfflineGuestName, setHostOfflineGuestName] = useState('');
       const [hostPaymentStatus, setHostPaymentStatus] = useState('Paid');
 
@@ -565,23 +571,7 @@
         }
       }, [hostSelectedHouse]);
 
-      useEffect(() => {
-        if (!bookingDate || !bookingTime) return;
-        const checkIn = new Date(`${bookingDate}T${bookingTime}`);
-        if (isNaN(checkIn.getTime())) return;
-
-        let exit = new Date(checkIn);
-        if (stayDuration === '1h') {
-          exit.setHours(exit.getHours() + 1);
-        } else {
-          exit.setDate(exit.getDate() + 1);
-        }
-
-        setExitDate(exit.toISOString().split('T')[0]);
-        setExitTime(exit.toTimeString().substring(0, 5));
-      }, [bookingDate, bookingTime, stayDuration]);
-
-      // 3-Month Data Purge Logic for Completed Bookings
+      // 3-Month Data Purge Logic & LocalStorage Initialization
       useEffect(() => {
         lucide.createIcons();
         const now = new Date();
@@ -592,14 +582,13 @@
           try {
             const parsed = JSON.parse(savedBookings);
             const filtered = parsed.filter(b => {
-              if (b.status === 'Completed' && b.checkInDate) {
-                const checkInDateObj = new Date(b.checkInDate);
-                return checkInDateObj >= threeMonthsAgo;
+              if (b.status === 'Completed' && b.startDate) {
+                const startDateObj = new Date(b.startDate);
+                return startDateObj >= threeMonthsAgo;
               }
               return true;
             });
             setBookings(filtered);
-            localStorage.setItem('srinivas_bookings', JSON.stringify(filtered));
           } catch (e) { console.error(e); }
         }
 
@@ -613,17 +602,57 @@
         lucide.createIcons();
       }, [isCheckoutOpen, isHostLoginOpen, isHostAuthenticated, showSplash, activeSidebarProperty, selectedPropertyId, hostSelectedHouse]);
 
-      const saveBooking = (newBooking) => {
-        const updated = [newBooking, ...bookings];
-        setBookings(updated);
-        localStorage.setItem('srinivas_bookings', JSON.stringify(updated));
+      // Robust persistence handler for bookings and locks
+      const saveBookingAndLock = (newBooking, newLock) => {
+        const updatedBookings = [newBooking, ...bookings];
+        setBookings(updatedBookings);
+        localStorage.setItem('srinivas_bookings', JSON.stringify(updatedBookings));
+
+        if (newLock) {
+          const updatedLocks = [...hostLocks, newLock];
+          setHostLocks(updatedLocks);
+          localStorage.setItem('srinivas_locks', JSON.stringify(updatedLocks));
+        }
+      };
+
+      const hasRangeConflict = (roomId, sDate, sTime, eDate, eTime) => {
+        const startH = parseInt(sTime.split(':')[0], 10);
+        const endH = parseInt(eTime.split(':')[0], 10);
+
+        const lockConflict = hostLocks.some(l => {
+          if (l.roomId !== roomId) return false;
+          if (sDate <= l.endDate && eDate >= l.startDate) {
+            if (sDate === l.startDate && sDate === l.endDate) {
+              return !(eH <= l.startHour || startH >= l.endHour);
+            }
+            return true;
+          }
+          return false;
+        });
+        if (lockConflict) return true;
+
+        return bookings.some(b => {
+          if (b.roomId !== roomId || b.status === 'Completed') return false;
+          const bsDate = b.startDate;
+          const beDate = b.endDate;
+          const bsH = parseInt(b.startHour || 0, 10);
+          const beH = parseInt(b.endHour || 24, 10);
+
+          if (sDate <= beDate && eDate >= bsDate) {
+            if (sDate === beDate && sDate === bsDate) {
+              return !(eH <= bsH || startH >= beH);
+            }
+            return true;
+          }
+          return false;
+        });
       };
 
       const handleBookingSubmit = (e) => {
         e.preventDefault();
-        const isLocked = hostLocks.some(l => l.roomId === selectedRoomId && l.date === bookingDate);
-        if (isLocked) {
-          alert('This room is locked/booked by the host for the selected date. Please choose another room or date.');
+        const conflict = hasRangeConflict(selectedRoomId, startDate, startTime, endDate, endTime);
+        if (conflict) {
+          alert('Slot Conflict! The selected date and time range is already locked/booked. Please pick an available range.');
           return;
         }
         setIsCheckoutOpen(true);
@@ -632,26 +661,42 @@
       const finalizeBooking = () => {
         const propertyObj = PROPERTIES.find(p => p.id === selectedPropertyId);
         const roomObj = propertyObj.rooms.find(r => r.roomId === selectedRoomId);
+        const startH = parseInt(startTime.split(':')[0], 10);
+        const endH = parseInt(endTime.split(':')[0], 10);
+
         const newBooking = {
           id: 'SSH-' + Math.floor(100000 + Math.random() * 900000),
           property: propertyObj.name,
           roomName: roomObj ? roomObj.name : 'Standard Room',
           roomId: selectedRoomId,
           city: propertyObj.city,
-          duration: stayDuration === '1h' ? '1 Hour Short Stay' : '24 Hours / 1 Night',
-          checkInDate: bookingDate,
-          checkInTime: bookingTime,
-          checkOutDate: exitDate,
-          checkOutTime: exitTime,
+          startDate,
+          startHour: startH,
+          endDate,
+          endHour: endH,
           guestName: guestDetails.name,
           guestPhone: guestDetails.phone,
           amount: price,
           status: 'Active',
-          bookingType: 'Online'
+          bookingType: 'Online (Paid)'
         };
 
-        saveBooking(newBooking);
+        const newLock = {
+          roomId: selectedRoomId,
+          startDate,
+          startHour: startH,
+          endDate,
+          endHour: endH
+        };
 
+        // Save into storage & state immediately
+        saveBookingAndLock(newBooking, newLock);
+
+        // Simulated Automated SMS Confirmation
+        const smsText = `[AUTOMATED SMS]: Dear ${newBooking.guestName}, your reservation (${newBooking.id}) for ${newBooking.roomName} from ${newBooking.startDate} (${startTime}) to ${newBooking.endDate} (${endTime}) is confirmed! Payment of ₹${newBooking.amount} successfully received.`;
+        console.log(smsText);
+
+        // Automated WhatsApp Message Trigger
         const message = encodeURIComponent(
           `*NEW LUXURY RESERVATION*\n` +
           `---------------------------\n` +
@@ -659,15 +704,15 @@
           `*Property:* ${newBooking.property} (${newBooking.roomName})\n` +
           `*Guest Name:* ${newBooking.guestName}\n` +
           `*Phone:* ${newBooking.guestPhone}\n` +
-          `*Check-In:* ${newBooking.checkInDate} at ${newBooking.checkInTime}\n` +
-          `*Expected Exit:* ${newBooking.checkOutDate} at ${newBooking.checkOutTime}\n` +
-          `*Duration:* ${newBooking.duration}\n` +
+          `*From:* ${newBooking.startDate} at ${startTime}\n` +
+          `*To:* ${newBooking.endDate} at ${endTime}\n` +
           `*Total Amount:* ₹${newBooking.amount.toLocaleString('en-IN')}\n\n` +
-          `Payment verified via Paytm UPI.`
+          `Payment verified successfully via Paytm UPI.`
         );
 
         window.open(`https://wa.me/${HOST_PHONE.replace('+', '')}?text=${message}`, '_blank');
         setIsCheckoutOpen(false);
+        alert('Payment successful! Booking confirmed and saved to host calendar.');
       };
 
       const markGuestCheckedOut = (id) => {
@@ -678,13 +723,16 @@
 
       const handleHostLockAndBook = (e) => {
         e.preventDefault();
-        if (!hostLockDate || !hostOfflineGuestName) {
-          alert('Please enter date and guest name.');
+        if (!hostStartDate || !hostEndDate || !hostOfflineGuestName) {
+          alert('Please enter start/end dates and guest name.');
           return;
         }
 
         const propObj = PROPERTIES.find(p => p.id === hostSelectedHouse);
         const roomObj = propObj.rooms.find(r => r.roomId === hostSelectedRoomId);
+
+        const startH = parseInt(hostStartTime.split(':')[0], 10);
+        const endH = parseInt(hostEndTime.split(':')[0], 10);
 
         const offlineBooking = {
           id: 'OFF-' + Math.floor(100000 + Math.random() * 900000),
@@ -692,11 +740,10 @@
           roomName: roomObj ? roomObj.name : 'Room',
           roomId: hostSelectedRoomId,
           city: propObj.city,
-          duration: 'Host Offline Booking',
-          checkInDate: hostLockDate,
-          checkInTime: hostLockTime,
-          checkOutDate: hostLockDate,
-          checkOutTime: '12:00',
+          startDate: hostStartDate,
+          startHour: startH,
+          endDate: hostEndDate,
+          endHour: endH,
           guestName: hostOfflineGuestName,
           guestPhone: 'Offline Entry',
           amount: 0,
@@ -704,15 +751,17 @@
           bookingType: 'Booked Offline - Payment Done'
         };
 
-        saveBooking(offlineBooking);
+        const newLock = { 
+          roomId: hostSelectedRoomId, 
+          startDate: hostStartDate, 
+          startHour: startH, 
+          endDate: hostEndDate, 
+          endHour: endH 
+        };
 
-        const newLock = { roomId: hostSelectedRoomId, date: hostLockDate };
-        const updatedLocks = [...hostLocks, newLock];
-        setHostLocks(updatedLocks);
-        localStorage.setItem('srinivas_locks', JSON.stringify(updatedLocks));
-
+        saveBookingAndLock(offlineBooking, newLock);
         setHostOfflineGuestName('');
-        alert('Room successfully locked and booked offline!');
+        alert('Range successfully locked, booked offline, and synchronized with calendar!');
       };
 
       const handleHostAuth = (e) => {
@@ -731,6 +780,8 @@
       const currentRoomObj = currentPropertyObj?.rooms.find(r => r.roomId === selectedRoomId);
       const hostPropObj = PROPERTIES.find(p => p.id === hostSelectedHouse);
       const hostRoomObj = hostPropObj?.rooms.find(r => r.roomId === hostSelectedRoomId);
+
+      const isCurrentRangeBooked = hasRangeConflict(selectedRoomId, startDate, startTime, endDate, endTime);
 
       return (
         <div className="min-h-screen">
@@ -821,7 +872,7 @@
             </div>
           </nav>
 
-          {/* IF HOST IS LOGGED IN, SHOW EXCLUSIVELY HOST CONTEXT (DO NOT SHOW USER VIEW) */}
+          {/* IF HOST IS LOGGED IN, SHOW EXCLUSIVELY HOST CONTEXT */}
           {isHostAuthenticated ? (
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
@@ -831,19 +882,18 @@
               <div className="max-w-7xl mx-auto space-y-10">
                 <div className="flex justify-between items-center border-b border-neutral-200 pb-4">
                   <div>
-                    <h2 className="text-3xl font-serif font-bold text-[#1A1815]">Host Management & Room Locking Portal</h2>
-                    <p className="text-xs text-neutral-500">Exclusively Host Context Active. Select area & room, inspect mini calendar, lock or book offline.</p>
+                    <h2 className="text-3xl font-serif font-bold text-[#1A1815]">Host Management & Time Zone Availability Portal</h2>
+                    <p className="text-xs text-neutral-500">Exclusively Host Context Active. View exact booked time zones for users and manage offline room locks.</p>
                   </div>
                   <button onClick={() => setIsHostAuthenticated(false)} className="text-xs border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-50">
                     Logout
                   </button>
                 </div>
 
-                {/* 1. Host Area & Room Selector (Text Only, No Images) */}
+                {/* 1. Host Area & Room Selector */}
                 <div className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm space-y-6">
                   <h3 className="text-lg font-serif font-bold text-[#C5A059]">1. Select Area & Room</h3>
                   
-                  {/* House Select Tabs */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {PROPERTIES.map((prop) => (
                       <button
@@ -862,9 +912,8 @@
                     ))}
                   </div>
 
-                  {/* Room Names List (Text-Only for Host) */}
                   <div className="space-y-3">
-                    <p className="text-xs uppercase font-bold text-neutral-500">Rooms in {hostPropObj.name} (Select one):</p>
+                    <p className="text-xs uppercase font-bold text-neutral-500">Rooms in {hostPropObj.name}:</p>
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                       {hostPropObj.rooms.map((room) => {
                         const isSelected = hostSelectedRoomId === room.roomId;
@@ -887,34 +936,60 @@
                     </div>
                   </div>
 
-                  {/* Mini Cute Calendar & Lock Form */}
+                  {/* Calendar & Range Lock Form */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-neutral-200 items-start">
                     <div className="space-y-3">
                       <h4 className="font-serif font-bold text-base text-[#1A1815]">
-                        Mini Calendar Availabilities: <span className="text-[#C5A059]">{hostRoomObj?.name}</span>
+                        Time Zone Availability for: <span className="text-[#C5A059]">{hostRoomObj?.name}</span>
                       </h4>
-                      <p className="text-xs text-neutral-500">Green = Free, Red = Booked / Locked by Host</p>
-                      <MiniCuteCalendar 
+                      <p className="text-xs text-neutral-500">Green = Free, Red = Booked at specific time zones.</p>
+                      <RangeAvailabilityCalendar 
                         roomId={hostSelectedRoomId} 
                         hostLocks={hostLocks} 
                         bookings={bookings} 
-                        selectedDate={hostLockDate}
-                        onSelectDate={(d) => setHostLockDate(d)}
+                        startDate={hostStartDate}
+                        endDate={hostEndDate}
                       />
                     </div>
 
                     <div className="space-y-4">
-                      <h4 className="font-serif font-bold text-base text-[#1A1815]">Lock Room & Offline Booking</h4>
+                      <h4 className="font-serif font-bold text-base text-[#1A1815]">Lock Time Zone & Offline Booking</h4>
                       <form onSubmit={handleHostLockAndBook} className="space-y-4 bg-[#FAF6F0] p-5 rounded-2xl border border-neutral-200">
-                        <div>
-                          <label className="text-[10px] uppercase text-neutral-500 block mb-1">Selected Date</label>
-                          <input 
-                            type="date"
-                            required
-                            value={hostLockDate}
-                            onChange={(e) => setHostLockDate(e.target.value)}
-                            className="w-full bg-white border border-neutral-300 rounded-xl px-3 py-2 text-xs text-neutral-800"
-                          />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-[10px] uppercase text-neutral-500 block mb-1">Start Date & Time</label>
+                            <input 
+                              type="date"
+                              required
+                              value={hostStartDate}
+                              onChange={(e) => setHostStartDate(e.target.value)}
+                              className="bg-white border border-neutral-300 rounded-xl px-2 py-1.5 text-xs text-neutral-800 w-full mb-2"
+                            />
+                            <input 
+                              type="time"
+                              required
+                              value={hostStartTime}
+                              onChange={(e) => setHostStartTime(e.target.value)}
+                              className="bg-white border border-neutral-300 rounded-xl px-2 py-1.5 text-xs text-neutral-800 w-full"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] uppercase text-neutral-500 block mb-1">End Date & Time</label>
+                            <input 
+                              type="date"
+                              required
+                              value={hostEndDate}
+                              onChange={(e) => setHostEndDate(e.target.value)}
+                              className="bg-white border border-neutral-300 rounded-xl px-2 py-1.5 text-xs text-neutral-800 w-full mb-2"
+                            />
+                            <input 
+                              type="time"
+                              required
+                              value={hostEndTime}
+                              onChange={(e) => setHostEndTime(e.target.value)}
+                              className="bg-white border border-neutral-300 rounded-xl px-2 py-1.5 text-xs text-neutral-800 w-full"
+                            />
+                          </div>
                         </div>
                         <div>
                           <label className="text-[10px] uppercase text-neutral-500 block mb-1">Offline Person Name</label>
@@ -939,16 +1014,16 @@
                           </select>
                         </div>
                         <button type="submit" className="w-full py-3 rounded-full bg-[#C5A059] text-white font-bold text-xs uppercase hover:bg-amber-600 transition">
-                          Lock Room & Save Offline Booking
+                          Lock Time Zone & Save Offline Booking
                         </button>
                       </form>
                     </div>
                   </div>
                 </div>
 
-                {/* Active Reservations & Host Offline Entries Table */}
+                {/* Active Reservations Table */}
                 <div className="space-y-4 pt-6 bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm">
-                  <h3 className="text-lg font-serif font-bold text-[#C5A059]">Active Guest Reservations & Offline Bookings List</h3>
+                  <h3 className="text-lg font-serif font-bold text-[#C5A059]">Active Guest Reservations & Booked Time Zones</h3>
                   {bookings.length === 0 ? (
                     <p className="text-center py-6 text-neutral-400 text-sm">No reservations stored yet.</p>
                   ) : (
@@ -957,10 +1032,10 @@
                         <thead className="uppercase bg-[#FAF6F0] text-[#C5A059]">
                           <tr>
                             <th className="p-3">ID</th>
-                            <th className="p-3">Guest / Offline Person Name</th>
-                            <th className="p-3">Property / Room</th>
-                            <th className="p-3">Check-In / Date</th>
-                            <th className="p-3">Payment / Booking Type</th>
+                            <th className="p-3">Guest Name</th>
+                            <th className="p-3">Room</th>
+                            <th className="p-3">Exact Booked Time Zone</th>
+                            <th className="p-3">Payment / Type</th>
                             <th className="p-3">Status</th>
                             <th className="p-3">Action</th>
                           </tr>
@@ -974,7 +1049,10 @@
                                 <p className="text-neutral-500">{b.bookingType === 'Booked Offline - Payment Done' ? 'Booked offline (Payment done)' : b.guestPhone}</p>
                               </td>
                               <td className="p-3">{b.property} <br/><span className="text-[10px] text-neutral-400">{b.roomName}</span></td>
-                              <td className="p-3">{b.checkInDate} ({b.checkInTime || '12:00'})</td>
+                              <td className="p-3">
+                                From: <strong className="text-[#C5A059]">{b.startDate} ({String(b.startHour).padStart(2, '0')}:00)</strong><br/>
+                                To: <strong className="text-[#C5A059]">{b.endDate} ({String(b.endHour).padStart(2, '0')}:00)</strong>
+                              </td>
                               <td className="p-3">
                                 <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold text-[10px]">
                                   {b.bookingType || 'Online'}
@@ -1138,7 +1216,7 @@
                 )}
               </AnimatePresence>
 
-              {/* RESERVATION ENGINE WITH MINI CUTE CALENDAR FOR USERS */}
+              {/* RESERVATION ENGINE WITH RANGE CALENDAR FOR USERS */}
               <section id="booking" className="py-24 px-6 bg-[#FAF6F0]/90 border-y border-[#C5A059]/20">
                 <div className="max-w-4xl mx-auto space-y-12">
                   <motion.div 
@@ -1148,7 +1226,7 @@
                     className="text-center space-y-3"
                   >
                     <h2 className="text-xs uppercase tracking-[0.3em] text-[#C5A059] font-bold">Reservation Engine</h2>
-                    <p className="text-3xl md:text-5xl font-serif font-bold text-[#1A1815]">Select Location, Room & Check Availability</p>
+                    <p className="text-3xl md:text-5xl font-serif font-bold text-[#1A1815]">Select Location, Room & Range Date/Time</p>
                   </motion.div>
 
                   <motion.form 
@@ -1191,147 +1269,85 @@
                         <span>2. Select Specific Room / Suite</span>
                       </label>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {currentPropertyObj.rooms.map((room) => {
-                          const isLocked = hostLocks.some(l => l.roomId === room.roomId && l.date === bookingDate);
-                          return (
-                            <button
-                              key={room.roomId}
-                              type="button"
-                              disabled={isLocked}
-                              onClick={() => setSelectedRoomId(room.roomId)}
-                              className={`p-4 rounded-2xl border text-left transition-all duration-300 relative ${
-                                isLocked 
-                                  ? 'bg-neutral-200 border-neutral-300 opacity-60 cursor-not-allowed'
-                                  : selectedRoomId === room.roomId 
-                                    ? 'border-[#C5A059] bg-[#FAF6F0] text-[#1A1815] shadow-md font-bold' 
-                                    : 'border-neutral-200 bg-white text-neutral-600 hover:border-[#C5A059]/50'
-                              }`}
-                            >
-                              <p className="font-serif text-sm font-bold">{room.name}</p>
-                              <p className="text-[10px] text-neutral-400 mt-1">{room.specifications.sqft}</p>
-                              {isLocked && (
-                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
-                                  LOCKED / BOOKED
-                                </span>
-                              )}
-                            </button>
-                          );
-                        })}
+                        {currentPropertyObj.rooms.map((room) => (
+                          <button
+                            key={room.roomId}
+                            type="button"
+                            onClick={() => setSelectedRoomId(room.roomId)}
+                            className={`p-4 rounded-2xl border text-left transition-all duration-300 relative ${
+                              selectedRoomId === room.roomId 
+                                ? 'border-[#C5A059] bg-[#FAF6F0] text-[#1A1815] shadow-md font-bold' 
+                                : 'border-neutral-200 bg-white text-neutral-600 hover:border-[#C5A059]/50'
+                            }`}
+                          >
+                            <p className="font-serif text-sm font-bold">{room.name}</p>
+                            <p className="text-[10px] text-neutral-400 mt-1">{room.specifications.sqft}</p>
+                          </button>
+                        ))}
                       </div>
                     </div>
 
-                    {/* MINI CUTE CALENDAR FOR USER VIEW */}
-                    <div className="space-y-3 bg-white p-6 rounded-2xl border border-neutral-200">
+                    {/* RANGE CALENDAR & SELECTOR */}
+                    <div className="space-y-4 bg-white p-6 rounded-2xl border border-neutral-200 shadow-sm">
                       <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold block">
-                        3. Mini Calendar Availability for {currentRoomObj?.name} (Including Host Offline Lock / Bookings)
+                        3. Select Range Date & Time for {currentRoomObj?.name}
                       </label>
-                      <MiniCuteCalendar 
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#FAF6F0] p-4 rounded-xl border border-neutral-200">
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-bold text-neutral-500 block">From (Start Date & Time)</label>
+                          <input 
+                            type="date"
+                            required
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="bg-white border border-neutral-300 rounded-lg px-3 py-2 text-xs text-neutral-800 w-full mb-2"
+                          />
+                          <input 
+                            type="time"
+                            required
+                            value={startTime}
+                            onChange={(e) => setStartTime(e.target.value)}
+                            className="bg-white border border-neutral-300 rounded-lg px-3 py-2 text-xs text-neutral-800 w-full"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-bold text-neutral-500 block">To (End Date & Time)</label>
+                          <input 
+                            type="date"
+                            required
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="bg-white border border-neutral-300 rounded-lg px-3 py-2 text-xs text-neutral-800 w-full mb-2"
+                          />
+                          <input 
+                            type="time"
+                            required
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                            className="bg-white border border-neutral-300 rounded-lg px-3 py-2 text-xs text-neutral-800 w-full"
+                          />
+                        </div>
+                      </div>
+
+                      <RangeAvailabilityCalendar 
                         roomId={selectedRoomId}
                         hostLocks={hostLocks}
                         bookings={bookings}
-                        selectedDate={bookingDate}
-                        onSelectDate={(d) => setBookingDate(d)}
+                        startDate={startDate}
+                        endDate={endDate}
                       />
-                    </div>
 
-                    {/* 4. Duration */}
-                    <div className="space-y-3">
-                      <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold flex items-center space-x-2">
-                        <i data-lucide="clock" className="w-4 h-4"></i>
-                        <span>4. Duration</span>
-                      </label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setStayDuration('1h')}
-                          className={`p-5 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
-                            stayDuration === '1h' ? 'border-[#C5A059] bg-[#FAF6F0] font-bold scale-[1.01]' : 'border-neutral-200 bg-white text-neutral-500 hover:border-[#C5A059]/50'
-                          }`}
-                        >
-                          <div>
-                            <p className="font-serif text-base text-[#1A1815]">Short Stay (1 Hour)</p>
-                            <p className="text-xs text-neutral-400">Quick relaxation</p>
-                          </div>
-                          <span className="text-xl font-bold text-[#C5A059]">₹2,500</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setStayDuration('24h')}
-                          className={`p-5 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
-                            stayDuration === '24h' ? 'border-[#C5A059] bg-[#FAF6F0] font-bold scale-[1.01]' : 'border-neutral-200 bg-white text-neutral-500 hover:border-[#C5A059]/50'
-                          }`}
-                        >
-                          <div>
-                            <p className="font-serif text-base text-[#1A1815]">Full Stay (24 Hours / 1 Night)</p>
-                            <p className="text-xs text-neutral-400">Complete private luxury stay</p>
-                          </div>
-                          <span className="text-xl font-bold text-[#C5A059]">₹5,000</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* 5. Check-In & Schedule */}
-                    <div className="space-y-4">
-                      <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold flex items-center space-x-2">
-                        <i data-lucide="calendar" className="w-4 h-4"></i>
-                        <span>5. Check-In & Exit Schedule</span>
-                      </label>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/80 p-5 rounded-2xl border border-neutral-200">
-                        <div className="space-y-3">
-                          <p className="text-xs font-bold uppercase text-[#C5A059]">Check-In</p>
-                          <div>
-                            <label className="text-[10px] uppercase text-neutral-500">Check-In Date</label>
-                            <input 
-                              type="date" 
-                              required 
-                              value={bookingDate}
-                              onChange={(e) => setBookingDate(e.target.value)}
-                              className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
-                            />
-                          </div>
-                          <div>
-                            <label className="text-[10px] uppercase text-neutral-500">Check-In Time</label>
-                            <input 
-                              type="time" 
-                              required 
-                              value={bookingTime}
-                              onChange={(e) => setBookingTime(e.target.value)}
-                              className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
-                            />
-                          </div>
+                      {isCurrentRangeBooked && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-center">
+                          <p className="text-xs font-bold text-red-600">⚠️ Range Conflict! Part of this time range is already booked or locked. Please pick an available range.</p>
                         </div>
-
-                        <div className="space-y-3">
-                          <p className="text-xs font-bold uppercase text-[#1A1815]">Expected Departure / Exit</p>
-                          <div>
-                            <label className="text-[10px] uppercase text-neutral-500">Exit Date</label>
-                            <input 
-                              type="date" 
-                              required 
-                              value={exitDate}
-                              onChange={(e) => setExitDate(e.target.value)}
-                              className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
-                            />
-                          </div>
-                          <div>
-                            <label className="text-[10px] uppercase text-neutral-500">Exit Time</label>
-                            <input 
-                              type="time" 
-                              required 
-                              value={exitTime}
-                              onChange={(e) => setExitTime(e.target.value)}
-                              className="w-full bg-white border border-neutral-300 rounded-xl px-4 py-2.5 text-neutral-800 focus:outline-none focus:border-[#C5A059]" 
-                            />
-                          </div>
-                        </div>
-                      </div>
+                      )}
                     </div>
 
-                    {/* 6. Guest Information */}
+                    {/* 4. Guest Information */}
                     <div className="space-y-4">
-                      <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold">6. Guest Information</label>
+                      <label className="text-xs uppercase tracking-wider text-[#C5A059] font-bold">4. Guest Information</label>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <input 
                           type="text" 
@@ -1365,8 +1381,16 @@
                         <span className="text-xs uppercase text-neutral-400 block">Total Amount</span>
                         <span className="text-3xl font-extrabold text-[#C5A059]">₹{price.toLocaleString('en-IN')}</span>
                       </div>
-                      <button type="submit" className="w-full md:w-auto px-10 py-4 rounded-full bg-[#C5A059] text-white font-bold tracking-wider text-xs uppercase hover:bg-amber-600 transition shadow-lg hover:shadow-amber-500/20">
-                        Proceed to Payment
+                      <button 
+                        type="submit" 
+                        disabled={isCurrentRangeBooked}
+                        className={`w-full md:w-auto px-10 py-4 rounded-full font-bold tracking-wider text-xs uppercase transition shadow-lg ${
+                          isCurrentRangeBooked 
+                            ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed shadow-none' 
+                            : 'bg-[#C5A059] text-white hover:bg-amber-600 hover:shadow-amber-500/20'
+                        }`}
+                      >
+                        {isCurrentRangeBooked ? 'Range Unavailable' : 'Proceed to Payment'}
                       </button>
                     </div>
 
@@ -1408,11 +1432,11 @@
                   <div className="bg-[#FAF6F0] p-4 rounded-2xl border border-neutral-200 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-neutral-500">Location:</span>
-                      <span className="text-[#1A1815] font-bold">{currentPropertyObj.name}</span>
+                      <span className="text-[#1A1815] font-bold">{currentPropertyObj.name} ({currentRoomObj?.name})</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-500">Check-In:</span>
-                      <span className="text-[#1A1815]">{bookingDate} at {bookingTime}</span>
+                      <span className="text-neutral-500">Range:</span>
+                      <span className="text-[#C5A059] font-bold">{startDate} ({startTime}) to {endDate} ({endTime})</span>
                     </div>
                     <div className="flex justify-between border-t border-neutral-200 pt-2 font-bold text-base">
                       <span>Total Amount:</span>

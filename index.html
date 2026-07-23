@@ -66,7 +66,7 @@
         }
 
         .glass-card:hover {
-            transform: translateY(-8px) scale(1.01);
+            transform: translateY(-4px) scale(1.005);
             border-color: rgba(197, 160, 89, 0.8);
             box-shadow: 0 20px 40px -15px rgba(197, 160, 89, 0.25),
                         0 0 20px 2px rgba(197, 160, 89, 0.15);
@@ -101,14 +101,8 @@
         }
 
         @keyframes luxuryBoxFade {
-            0% {
-            opacity: 0;
-            transform: translateY(25px);
-            }
-            100% {
-            opacity: 1;
-            transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .animate-box-entry {
@@ -124,7 +118,17 @@
   <!-- React Application Logic -->
   <script type="text/babel">
     const { useState, useEffect } = React;
-    const { motion, AnimatePresence } = window.Motion;
+    
+    const FM = window.FramerMotion || window.Motion || {};
+    const motion = FM.motion || {
+      div: ({ children, ...props }) => <div {...props}>{children}</div>,
+      h1: ({ children, ...props }) => <h1 {...props}>{children}</h1>,
+      p: ({ children, ...props }) => <p {...props}>{children}</p>,
+      button: ({ children, ...props }) => <button {...props}>{children}</button>,
+      img: (props) => <img {...props} />,
+      form: ({ children, ...props }) => <form {...props}>{children}</form>
+    };
+    const AnimatePresence = FM.AnimatePresence || (({ children }) => React.createElement(React.Fragment, null, children));
 
     const PROPERTIES = [
       {
@@ -381,39 +385,68 @@
       const hoursList = Array.from({ length: 24 }, (_, i) => i);
 
       return (
-        <div className="bg-[#FAF6F0] p-4 rounded-2xl border border-[#C5A059]/30 shadow-inner space-y-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
-            <span className="font-serif font-bold text-xs uppercase text-[#1A1815]">Inspect Date & Time Slot Availability:</span>
-            <input 
-              type="date"
-              value={viewDate}
-              onChange={(e) => setViewDate(e.target.value)}
-              className="bg-white border border-neutral-300 rounded-lg px-2 py-1 text-xs text-neutral-800"
-            />
+        <div className="bg-[#FAF6F0]/85 backdrop-blur-md p-6 rounded-3xl border border-[#C5A059]/30 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-[#C5A059]/20 pb-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#C5A059] animate-pulse"></div>
+              <span className="font-serif font-bold text-xs uppercase text-[#1A1815] tracking-widest">Real-Time Schedule Matrix</span>
+            </div>
+            <div className="flex items-center space-x-2 bg-white px-3 py-1.5 rounded-2xl border border-neutral-200 shadow-xs">
+              <span className="text-[10px] uppercase text-neutral-400 font-bold">Date:</span>
+              <input 
+                type="date"
+                value={viewDate}
+                onChange={(e) => setViewDate(e.target.value)}
+                className="bg-transparent text-xs text-neutral-900 font-semibold focus:outline-none cursor-pointer"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-48 overflow-y-auto p-1">
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2.5 max-h-64 overflow-y-auto p-1 custom-scrollbar">
             {hoursList.map((hour) => {
               const booked = isSlotBooked(roomId, viewDate, hour, bookings, hostLocks);
               const formattedHour = String(hour).padStart(2, '0') + ":00";
 
-              let btnStyle = "bg-green-50 text-green-700 border-green-200";
+              let slotStyle = "bg-emerald-50/80 text-emerald-900 border-emerald-200 hover:border-emerald-400 hover:shadow-md";
+              let dotColor = "bg-emerald-500";
+              let badgeText = "Available";
+
               if (booked) {
-                btnStyle = "bg-red-100 text-red-700 border-red-300 font-bold";
+                slotStyle = "bg-rose-50/80 text-rose-900 border-rose-200 hover:border-rose-300 opacity-90";
+                dotColor = "bg-rose-500 animate-pulse";
+                badgeText = "Reserved";
               }
 
               return (
-                <div
+                <motion.div
+                  whileHover={{ scale: 1.04, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   key={hour}
-                  className={`p-1.5 rounded-lg border text-center text-[10px] transition flex flex-col items-center justify-center ${btnStyle}`}
+                  className={`p-2.5 rounded-2xl border backdrop-blur-sm text-center transition-all flex flex-col items-center justify-center space-y-1 ${slotStyle}`}
                 >
-                  <span className="font-bold">{formattedHour}</span>
-                  <span className="text-[8px] opacity-90">{booked ? 'LOCKED' : 'Free'}</span>
-                </div>
+                  <span className="font-serif font-bold text-xs tracking-tight">{formattedHour}</span>
+                  <div className="flex items-center space-x-1">
+                    <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`}></span>
+                    <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80">{badgeText}</span>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
-          <p className="text-[10px] text-neutral-500 text-center">Red = Locked/Booked at specific time zones. Green = Available.</p>
+
+          <div className="flex flex-col sm:flex-row justify-between items-center text-[11px] text-neutral-500 pt-2 border-t border-[#C5A059]/10 gap-2">
+            <div className="flex items-center space-x-4">
+              <span className="flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                <span className="font-medium">Open & Available</span>
+              </span>
+              <span className="flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+                <span className="font-medium">Booked / Locked</span>
+              </span>
+            </div>
+            <span className="text-[10px] text-[#C5A059] font-bold tracking-wider uppercase">Srinivas Concierge Sync</span>
+          </div>
         </div>
       );
     }
@@ -450,13 +483,13 @@
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
               />
             </AnimatePresence>
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
 
-            <span className="absolute top-4 left-4 text-xs font-bold uppercase tracking-wider bg-white/90 backdrop-blur-md px-3.5 py-1 rounded-full text-[#1A1815] shadow-md border border-[#C5A059]/40">
+            <span className="absolute top-4 left-4 text-xs font-bold uppercase tracking-wider bg-white/95 backdrop-blur-md px-3.5 py-1 rounded-full text-[#1A1815] shadow-md border border-[#C5A059]/40">
               {prop.city}
             </span>
 
@@ -469,7 +502,7 @@
               aria-label="Previous Photo"
               className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C5A059] text-white flex items-center justify-center transition backdrop-blur-sm border border-white/20 hover:scale-110 active:scale-95 shadow-lg z-10"
             >
-              <i data-lucide="chevron-left" className="w-6 h-6"></i>
+              <i data-lucide="chevron-left" className="w-5 h-5"></i>
             </button>
 
             <button 
@@ -477,12 +510,12 @@
               aria-label="Next Photo"
               className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C5A059] text-white flex items-center justify-center transition backdrop-blur-sm border border-white/20 hover:scale-110 active:scale-95 shadow-lg z-10"
             >
-              <i data-lucide="chevron-right" className="w-6 h-6"></i>
+              <i data-lucide="chevron-right" className="w-5 h-5"></i>
             </button>
 
             <button 
               onClick={() => onOpenSidebar(prop)}
-              className="absolute top-4 right-4 bg-[#C5A059] text-white p-2 rounded-full shadow-lg hover:scale-110 transition text-xs font-bold flex items-center space-x-1 px-3 z-10"
+              className="absolute top-4 right-4 bg-[#C5A059] text-white p-2 rounded-full shadow-lg hover:scale-110 transition text-xs font-bold flex items-center space-x-1.5 px-3.5 z-10"
             >
               <span>Rooms (5)</span>
               <i data-lucide="layout" className="w-3.5 h-3.5"></i>
@@ -492,7 +525,7 @@
           <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
             <div className="space-y-2">
               <h3 className="text-2xl font-serif font-bold text-[#1A1815]">{prop.name}</h3>
-              <p className="text-xs text-neutral-500">{prop.tagline}</p>
+              <p className="text-xs text-neutral-500 font-light">{prop.tagline}</p>
 
               <div className="grid grid-cols-2 gap-2 py-3 border-y border-neutral-200/80">
                 {prop.rooms[0].features.map((feat, i) => (
@@ -506,12 +539,12 @@
 
             <div className="pt-2 flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase text-neutral-400 block font-semibold">Rate</span>
-                <span className="text-xl font-bold text-[#C5A059]">₹2,500 <span className="text-xs font-normal text-neutral-500">/ 1 hr</span></span>
+                <span className="text-[10px] uppercase text-neutral-400 block font-semibold tracking-wider">Tariff</span>
+                <span className="text-xl font-bold text-[#C5A059]">₹2,500 <span className="text-xs font-normal text-neutral-500">/ hr</span></span>
               </div>
               <button 
                 onClick={() => onOpenSidebar(prop)}
-                className="px-4 py-2 rounded-full border border-[#C5A059] text-[#C5A059] text-xs font-bold hover:bg-[#C5A059] hover:text-white transition duration-300"
+                className="px-5 py-2.5 rounded-full border border-[#C5A059] text-[#C5A059] text-xs font-bold hover:bg-[#C5A059] hover:text-white transition duration-300 shadow-xs"
               >
                 View Rooms
               </button>
@@ -542,10 +575,13 @@
       const [hostPinInput, setHostPinInput] = useState('');
       const [isHostAuthenticated, setIsHostAuthenticated] = useState(false);
       const [pinError, setPinError] = useState(false);
+      
       const [bookings, setBookings] = useState([]);
       const [hostLocks, setHostLocks] = useState([]); 
 
-      // Host Manual Booking state
+      // Cute green success popup state
+      const [successPopup, setSuccessPopup] = useState(false);
+
       const [hostSelectedHouse, setHostSelectedHouse] = useState(PROPERTIES[0].id);
       const [hostSelectedRoomId, setHostSelectedRoomId] = useState(PROPERTIES[0].rooms[0].roomId);
       const [hostStartDate, setHostStartDate] = useState(todayStr);
@@ -571,24 +607,25 @@
         }
       }, [hostSelectedHouse]);
 
-      // 3-Month Data Purge Logic & LocalStorage Initialization
+      // 1-Month Automatic Data Purge for Completed Bookings
       useEffect(() => {
         lucide.createIcons();
         const now = new Date();
-        const threeMonthsAgo = new Date(now.setMonth(now.getMonth() - 3));
+        const oneMonthAgo = new Date(now.setMonth(now.getMonth() - 1));
 
         const savedBookings = localStorage.getItem('srinivas_bookings');
         if (savedBookings) {
           try {
             const parsed = JSON.parse(savedBookings);
+            // Filter out completed bookings older than 1 month
             const filtered = parsed.filter(b => {
-              if (b.status === 'Completed' && b.startDate) {
-                const startDateObj = new Date(b.startDate);
-                return startDateObj >= threeMonthsAgo;
+              if (b.status === 'Completed' && b.completedAt) {
+                return new Date(b.completedAt) >= oneMonthAgo;
               }
               return true;
             });
             setBookings(filtered);
+            localStorage.setItem('srinivas_bookings', JSON.stringify(filtered));
           } catch (e) { console.error(e); }
         }
 
@@ -600,9 +637,15 @@
 
       useEffect(() => {
         lucide.createIcons();
-      }, [isCheckoutOpen, isHostLoginOpen, isHostAuthenticated, showSplash, activeSidebarProperty, selectedPropertyId, hostSelectedHouse]);
+      }, [isCheckoutOpen, isHostLoginOpen, isHostAuthenticated, showSplash, activeSidebarProperty, selectedPropertyId, hostSelectedHouse, bookings, successPopup]);
 
-      // Robust persistence handler for bookings and locks
+      const triggerSuccessPopup = () => {
+        setSuccessPopup(true);
+        setTimeout(() => {
+          setSuccessPopup(false);
+        }, 3500);
+      };
+
       const saveBookingAndLock = (newBooking, newLock) => {
         const updatedBookings = [newBooking, ...bookings];
         setBookings(updatedBookings);
@@ -623,7 +666,7 @@
           if (l.roomId !== roomId) return false;
           if (sDate <= l.endDate && eDate >= l.startDate) {
             if (sDate === l.startDate && sDate === l.endDate) {
-              return !(eH <= l.startHour || startH >= l.endHour);
+              return !(endH <= l.startHour || startH >= l.endHour);
             }
             return true;
           }
@@ -640,7 +683,7 @@
 
           if (sDate <= beDate && eDate >= bsDate) {
             if (sDate === beDate && sDate === bsDate) {
-              return !(eH <= bsH || startH >= beH);
+              return !(endH <= bsH || startH >= beH);
             }
             return true;
           }
@@ -678,7 +721,8 @@
           guestPhone: guestDetails.phone,
           amount: price,
           status: 'Active',
-          bookingType: 'Online (Paid)'
+          bookingType: 'Online (Paid)',
+          createdAt: new Date().toISOString()
         };
 
         const newLock = {
@@ -689,14 +733,8 @@
           endHour: endH
         };
 
-        // Save into storage & state immediately
         saveBookingAndLock(newBooking, newLock);
 
-        // Simulated Automated SMS Confirmation
-        const smsText = `[AUTOMATED SMS]: Dear ${newBooking.guestName}, your reservation (${newBooking.id}) for ${newBooking.roomName} from ${newBooking.startDate} (${startTime}) to ${newBooking.endDate} (${endTime}) is confirmed! Payment of ₹${newBooking.amount} successfully received.`;
-        console.log(smsText);
-
-        // Automated WhatsApp Message Trigger
         const message = encodeURIComponent(
           `*NEW LUXURY RESERVATION*\n` +
           `---------------------------\n` +
@@ -712,13 +750,32 @@
 
         window.open(`https://wa.me/${HOST_PHONE.replace('+', '')}?text=${message}`, '_blank');
         setIsCheckoutOpen(false);
-        alert('Payment successful! Booking confirmed and saved to host calendar.');
+        setGuestDetails({ name: '', phone: '', email: '' });
+        
+        triggerSuccessPopup();
       };
 
       const markGuestCheckedOut = (id) => {
-        const updated = bookings.map(b => b.id === id ? { ...b, status: 'Completed' } : b);
-        setBookings(updated);
-        localStorage.setItem('srinivas_bookings', JSON.stringify(updated));
+        const targetBooking = bookings.find(b => b.id === id);
+        if (!targetBooking) return;
+
+        const timestamp = new Date().toISOString();
+        const updatedBookings = bookings.map(b => b.id === id ? { ...b, status: 'Completed', completedAt: timestamp } : b);
+        setBookings(updatedBookings);
+        localStorage.setItem('srinivas_bookings', JSON.stringify(updatedBookings));
+
+        const updatedLocks = hostLocks.filter(l => {
+          if (l.roomId !== targetBooking.roomId) return true;
+          const matchesRange = l.startDate === targetBooking.startDate && 
+                               l.startHour === targetBooking.startHour && 
+                               l.endDate === targetBooking.endDate && 
+                               l.endHour === targetBooking.endHour;
+          return !matchesRange;
+        });
+        setHostLocks(updatedLocks);
+        localStorage.setItem('srinivas_locks', JSON.stringify(updatedLocks));
+
+        alert('Guest marked as checked out! Time slot is now fully released. Note: Completed records automatically clear after 1 month.');
       };
 
       const handleHostLockAndBook = (e) => {
@@ -748,7 +805,8 @@
           guestPhone: 'Offline Entry',
           amount: 0,
           status: 'Active',
-          bookingType: 'Booked Offline - Payment Done'
+          bookingType: 'Booked Offline - Payment Done',
+          createdAt: new Date().toISOString()
         };
 
         const newLock = { 
@@ -761,7 +819,8 @@
 
         saveBookingAndLock(offlineBooking, newLock);
         setHostOfflineGuestName('');
-        alert('Range successfully locked, booked offline, and synchronized with calendar!');
+        
+        triggerSuccessPopup();
       };
 
       const handleHostAuth = (e) => {
@@ -784,9 +843,30 @@
       const isCurrentRangeBooked = hasRangeConflict(selectedRoomId, startDate, startTime, endDate, endTime);
 
       return (
-        <div className="min-h-screen">
+        <div className="min-h-screen relative">
           
-          {/* --- 1. LOTTIE ANIMATION ENTRANCE SCREEN --- */}
+          {/* --- CUTE GREEN SUCCESS POPUP --- */}
+          <AnimatePresence>
+            {successPopup && (
+              <motion.div
+                initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="fixed bottom-8 right-6 z-50 bg-emerald-600 text-white px-6 py-4 rounded-3xl shadow-2xl flex items-center space-x-3 border border-emerald-400"
+              >
+                <div className="w-8 h-8 rounded-full bg-white text-emerald-600 flex items-center justify-center font-bold shadow-md">
+                  ✓
+                </div>
+                <div>
+                  <p className="font-serif font-bold text-sm">Booked Successfully!</p>
+                  <p className="text-[11px] text-emerald-100">Reservation synchronized with calendar.</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* --- LOTTIE ANIMATION ENTRANCE SCREEN --- */}
           <AnimatePresence>
             {showSplash && (
               <motion.div 
@@ -796,11 +876,14 @@
                 className="fixed inset-0 z-50 bg-[#FDFBF7] flex flex-col items-center justify-center p-6 text-center"
               >
                 <div className="w-64 h-64 md:w-80 md:h-80 mb-4 flex items-center justify-center">
-                   <img 
+                   <img
                         src="House.svg" 
-                        alt="House Animation" 
-                        className="w-full h-full object-contain"
-                    />
+                        background="transparent" 
+                        speed="1" 
+                        style={{width: '100%', height: '100%'}} 
+                        loop 
+                        autoplay
+                   ></img>
                 </div>
 
                 <motion.h1 
@@ -883,7 +966,7 @@
                 <div className="flex justify-between items-center border-b border-neutral-200 pb-4">
                   <div>
                     <h2 className="text-3xl font-serif font-bold text-[#1A1815]">Host Management & Time Zone Availability Portal</h2>
-                    <p className="text-xs text-neutral-500">Exclusively Host Context Active. View exact booked time zones for users and manage offline room locks.</p>
+                    <p className="text-xs text-neutral-500">Exclusively Host Context Active. Completed stays auto-clear after 1 month.</p>
                   </div>
                   <button onClick={() => setIsHostAuthenticated(false)} className="text-xs border border-red-500 text-red-500 px-4 py-2 rounded-full hover:bg-red-50">
                     Logout
@@ -1025,7 +1108,13 @@
                 <div className="space-y-4 pt-6 bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm">
                   <h3 className="text-lg font-serif font-bold text-[#C5A059]">Active Guest Reservations & Booked Time Zones</h3>
                   {bookings.length === 0 ? (
-                    <p className="text-center py-6 text-neutral-400 text-sm">No reservations stored yet.</p>
+                    <div className="text-center py-12 space-y-3 bg-[#FAF6F0]/50 rounded-2xl border border-dashed border-neutral-300">
+                      <div className="w-12 h-12 rounded-full bg-amber-50 text-[#C5A059] flex items-center justify-center mx-auto shadow-sm">
+                        <i data-lucide="calendar" className="w-6 h-6"></i>
+                      </div>
+                      <p className="font-serif font-bold text-[#1A1815] text-sm">No Active Reservations Right Now</p>
+                      <p className="text-xs text-neutral-400 max-w-sm mx-auto">All luxury suites are currently open and available for incoming guests and bookings.</p>
+                    </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs text-neutral-700">
@@ -1068,13 +1157,15 @@
                                 </span>
                               </td>
                               <td className="p-3">
-                                {b.status !== 'Completed' && (
+                                {b.status !== 'Completed' ? (
                                   <button 
                                     onClick={() => markGuestCheckedOut(b.id)}
                                     className="text-[10px] border border-[#C5A059] text-[#C5A059] px-3 py-1 rounded-lg hover:bg-[#C5A059] hover:text-white transition"
                                   >
                                     Mark Checked Out
                                   </button>
+                                ) : (
+                                  <span className="text-[10px] text-neutral-400 font-semibold">Slot Released</span>
                                 )}
                               </td>
                             </tr>
@@ -1481,11 +1572,18 @@
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
-                  className="bg-white border border-[#C5A059]/40 max-w-md w-full rounded-3xl p-6 space-y-6 relative shadow-2xl"
+                  className="bg-white border border-[#C5A059]/40 max-w-md w-full rounded-3xl p-6 space-y-6 relative shadow-2xl z-50"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <button onClick={() => setIsHostLoginOpen(false)} className="absolute top-4 right-4 text-neutral-400 hover:text-black">✕</button>
+                  <button 
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); setIsHostLoginOpen(false); }} 
+                    className="absolute top-4 right-4 text-neutral-400 hover:text-black p-2 z-20"
+                  >
+                    ✕
+                  </button>
                   
-                  <div className="text-center space-y-2">
+                  <div className="text-center space-y-2 pt-2">
                     <h3 className="text-2xl font-serif font-bold text-[#1A1815]">Host Access Portal</h3>
                     <p className="text-xs text-neutral-500">Enter Security PIN (7780) to open host context</p>
                   </div>
@@ -1494,13 +1592,14 @@
                     <input 
                       type="password"
                       maxLength={4}
+                      autoFocus
                       placeholder="PIN (7780)"
                       value={hostPinInput}
                       onChange={(e) => setHostPinInput(e.target.value)}
                       className="w-full bg-[#FAF6F0] border border-neutral-300 rounded-xl px-4 py-3 text-center text-2xl tracking-widest text-neutral-800 focus:outline-none focus:border-[#C5A059]"
                     />
-                    {pinError && <p className="text-xs text-red-500 text-center">Invalid Security PIN</p>}
-                    <button type="submit" className="w-full py-3.5 rounded-full bg-[#C5A059] text-white font-bold">
+                    {pinError && <p className="text-xs text-red-500 text-center font-semibold">Invalid Security PIN</p>}
+                    <button type="submit" className="w-full py-3.5 rounded-full bg-[#C5A059] text-white font-bold text-xs uppercase tracking-wider">
                       Login
                     </button>
                   </form>
